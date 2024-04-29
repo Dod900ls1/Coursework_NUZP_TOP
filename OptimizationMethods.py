@@ -82,36 +82,44 @@ class OptimizationMethods:
         return uk, i
 
     @staticmethod
-    def random_search(fun, bounds, max_iterations=1000):
+    def random_search(fun_expr, x_k, step_size=0.1, max_iterations=1000, shrink_step=False):
         """
-        Random search method for function optimization.
+        Random search method for function optimization starting from an initial point.
 
         Args:
-        - fun: The function to optimize.
-        - bounds: A tuple of (min, max) defining the range of x values to search.
+        - fun_expr: The Sympy expression of the function to optimize.
+        - x_k: Initial guess for the optimal value.
+        - step_size: Initial magnitude of the random steps.
         - max_iterations: Maximum number of iterations to perform.
+        - shrink_step: Boolean to decide if the step size should decrease over iterations.
 
         Returns:
-        - best_x: The x value that resulted in the lowest function value.
+        - x_k: The x value that resulted in the lowest function value.
         - best_fun_val: The lowest function value found.
         - iterations: The number of iterations performed.
         """
         x = sp.symbols('x')
-        fun_lambdified = sp.lambdify(x, fun(x), 'numpy')  # Convert symbolic expression to a numerical function
+        fun_lambdified = sp.lambdify(x, fun_expr, 'numpy')
 
-        best_x = None
-        best_fun_val = float('inf')  # Initialize to the largest possible value
-        iterations = 0  # Initialize iteration counter
+        best_x = x_k
+        best_fun_val = fun_lambdified(x_k)
+        iterations = 0
 
         for i in range(max_iterations):
-            x_k = random.uniform(bounds[0], bounds[1])  # Generate a random candidate within the bounds
-            fun_val = fun_lambdified(x_k)  # Evaluate the function at the candidate point
+            step_direction = random.choice([-1, 1])
+            x_k_new = x_k + step_direction * step_size * random.random()
 
-            if fun_val < best_fun_val:  # If the current value is the best so far, update the best records
+            fun_val = fun_lambdified(x_k_new)
+
+            if fun_val < best_fun_val:
                 best_fun_val = fun_val
-                best_x = x_k
+                best_x = x_k_new
+                x_k = x_k_new
 
-            iterations += 1  # Update the iteration count
+            if shrink_step:
+                step_size *= 0.95
+
+            iterations += 1
 
         return best_x, iterations
 

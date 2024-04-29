@@ -14,5 +14,5 @@ if __name__ == '__main__':
     # Gradient optimization method
     print(OptimizationMethods.gradient_method(fun, uk=3))
 
-    # Gradient optimization method
-    print(OptimizationMethods.random_search(fun, (-10, 10)))
+    # Random search optimization method
+    print(OptimizationMethods.random_search(f, x_k=3))
