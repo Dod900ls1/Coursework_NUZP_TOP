@@ -1,4 +1,5 @@
 from PointOptimizationMethods import PointOptimizationMethods
+from IntervalOptimizationMethods import IntervalOptimizationMethods
 import sympy as sp
 
 if __name__ == '__main__':
@@ -36,3 +37,12 @@ if __name__ == '__main__':
     print("Optimal value (x):", x_optimal_random)
     print("Best function value:", best_function_value_random)
     print("Iterations:", iterations_random)
+    print()
+
+    # Golden ratio optimization method
+    x_optimal_golden, best_function_value_golden, iterations_golden = IntervalOptimizationMethods.golden_ratio_optimization(
+        fun, a=2, b=-2)
+    print("Golden Ratio Optimization Method:")
+    print("Optimal value (x):", x_optimal_golden)
+    print("Best function value:", best_function_value_golden)
+    print("Iterations:", iterations_golden)
