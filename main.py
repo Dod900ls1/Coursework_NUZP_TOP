@@ -15,4 +15,4 @@ if __name__ == '__main__':
     print(PointOptimizationMethods.gradient_method(fun, uk=3))
 
     # Random search optimization method
-    print(PointOptimizationMethods.random_search(f, x_k=3))
+    print(PointOptimizationMethods.random_search(f, x_k=3, shrink_step=True))

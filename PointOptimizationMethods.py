@@ -9,7 +9,7 @@ class PointOptimizationMethods:
     """
 
     @staticmethod
-    def newtons_method(f, x_k, precision=1e-6, max_iterations=100) -> tuple:
+    def newtons_method(f: sp.Expr, x_k: float, precision: float = 1e-6, max_iterations: int = 100) -> tuple:
         """
         Newton's method for optimization.
 
@@ -21,6 +21,7 @@ class PointOptimizationMethods:
 
         Returns:
         - x_k: Optimal value.
+        - best_function_value: Best function value
         - iterations: Number of iterations.
         """
         x = sp.symbols('x')
@@ -42,10 +43,11 @@ class PointOptimizationMethods:
             x_k = x_k1
             iterations += 1
 
-        return float(x_k), iterations
+        return float(x_k), f.subs(x, x_k), iterations
 
     @staticmethod
-    def gradient_method(fun, uk, max_iterations=1000, tolerance=1e-6, alpha=0.01, beta=0.5):
+    def gradient_method(fun: sp.Expr, uk: float, max_iterations: int = 1000, tolerance: float = 1e-6,
+                        alpha: float = 0.01, beta: float = 0.5) -> tuple:
         """
         Gradient descent method for optimization.
 
@@ -59,6 +61,7 @@ class PointOptimizationMethods:
 
         Returns:
         - uk: Optimal value.
+        - best_function_value: Best function value
         - i: Number of iterations.
         """
         x = sp.symbols('x')
@@ -80,18 +83,21 @@ class PointOptimizationMethods:
                 break
             i += 1
 
-        return uk, i
+        return uk, fun(uk), i
 
     @staticmethod
-    def random_search(fun_expr, x_k, step_size=0.1, max_iterations=1000, shrink_step=False):
+    def random_search(fun_expr: sp.Expr, x_k: float, tolerance: float = 1e-6, step_size: float = 1,
+                      max_iterations: int = 1000,
+                      shrink_step: bool = False) -> tuple:
         """
         Random search method for function optimization starting from an initial point.
 
         Args:
         - fun_expr: The Sympy expression of the function to optimize.
         - x_k: Initial guess for the optimal value.
+        - tolerance: Tolerance for convergence.
         - step_size: Initial magnitude of the random steps.
-        - max_iterations: Maximum number of iterations to perform.
+        - max_iterations: Maximum number of iterations.
         - shrink_step: Boolean to decide if the step size should decrease over iterations.
 
         Returns:
@@ -105,6 +111,7 @@ class PointOptimizationMethods:
         best_x = x_k
         best_fun_val = fun_lambdified(x_k)
         iterations = 0
+        previous_fun_val = best_fun_val
 
         for i in range(max_iterations):
             step_direction = random.choice([-1, 1])
@@ -117,9 +124,14 @@ class PointOptimizationMethods:
                 best_x = x_k_new
                 x_k = x_k_new
 
-            if shrink_step:
-                step_size *= 0.95
+            if shrink_step and (step_size > tolerance):
+                step_size = 0.95 * step_size
 
             iterations += 1
+            # Terminate if improvement is less than tolerance
+            if abs(fun_val - previous_fun_val) < tolerance:
+                break
 
-        return best_x, iterations
+            previous_fun_val = fun_val
+
+        return best_x, best_fun_val, iterations
