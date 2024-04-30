@@ -1,4 +1,4 @@
-from OptimizationMethods import OptimizationMethods
+from PointOptimizationMethods import PointOptimizationMethods
 import sympy as sp
 
 
@@ -9,10 +9,10 @@ if __name__ == '__main__':
         return x**4 / 20 + x / 4 + 1  # Regular Python function for gradient descent
 
     # Newton's optimization method
-    print(OptimizationMethods.newtons_method(f, x_k=3))
+    print(PointOptimizationMethods.newtons_method(f, x_k=3))
 
     # Gradient optimization method
-    print(OptimizationMethods.gradient_method(fun, uk=3))
+    print(PointOptimizationMethods.gradient_method(fun, uk=3))
 
     # Random search optimization method
-    print(OptimizationMethods.random_search(f, x_k=3))
+    print(PointOptimizationMethods.random_search(f, x_k=3))

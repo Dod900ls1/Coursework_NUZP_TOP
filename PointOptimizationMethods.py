@@ -2,7 +2,8 @@ import random
 import sympy as sp
 import numpy as np
 
-class OptimizationMethods:
+
+class PointOptimizationMethods:
     """
     This class contains all methods of optimization we needed for our project.
     """
@@ -122,5 +123,3 @@ class OptimizationMethods:
             iterations += 1
 
         return best_x, iterations
-
-
