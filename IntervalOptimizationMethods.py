@@ -2,7 +2,6 @@ import numpy as np
 from typing import Callable, Tuple
 
 
-
 class IntervalOptimizationMethods:
     @staticmethod
     def golden_ratio_optimization(func: Callable, a: float, b: float, tolerance: float = 1e-6) -> Tuple[
@@ -51,7 +50,8 @@ class IntervalOptimizationMethods:
         return x_optimal, best_function_value, iterations
 
     @staticmethod
-    def fibonacci_optimization(func: Callable, lower_bound: float, upper_bound: float, tolerance: float = 1e-6, n: int = 100) -> Tuple[float, float, int]:
+    def fibonacci_optimization(func: Callable, lower_bound: float, upper_bound: float, tolerance: float = 1e-6,
+                               n: int = 100) -> Tuple[float, float, int]:
         """
         Fibonacci Search method for finding the minimum of a function. This method uses Fibonacci
         numbers to progressively narrow the search interval.
@@ -76,7 +76,7 @@ class IntervalOptimizationMethods:
         f2 = func(x2)
 
         iterations = 0
-        while (upper_bound - lower_bound) > tolerance and iterations < n-2:
+        while (upper_bound - lower_bound) > tolerance and iterations < n - 2:
             iterations += 1
             if f1 < f2:
                 upper_bound = x2
@@ -96,7 +96,8 @@ class IntervalOptimizationMethods:
         return x_min, minimum, iterations
 
     @staticmethod
-    def bisection_optimization(func: Callable, a: float, b: float, delta: float, epsilon: float) -> Tuple[float, float, int]:
+    def bisection_optimization(func: Callable, a: float, b: float, delta: float, epsilon: float) -> Tuple[
+        float, float, int]:
         """
         Bisection method for finding the minimum of a function. This method evaluates
         the function at points around the midpoint of the interval, adjusting the interval
@@ -126,4 +127,3 @@ class IntervalOptimizationMethods:
         x_min = (a + b) / 2
         minimum = func(x_min)
         return x_min, minimum, iterations
-

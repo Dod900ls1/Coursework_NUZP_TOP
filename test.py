@@ -1,103 +1,105 @@
-def fibonacci_search(f, lower_boundary, upper_boundary, tolerance=1e-4, n=100):
-    # Create the Fibonacci sequence up to n
-    fib = [0, 1]
-    for i in range(2, n + 1):
-        fib.append(fib[-1] + fib[-2])
+import time
+import sympy as sp
+from PointOptimizationMethods import PointOptimizationMethods
+from IntervalOptimizationMethods import IntervalOptimizationMethods
+import matplotlib.pyplot as plt
+import numpy as np
 
-    # Initial setup
-    x1 = lower_boundary + (fib[n - 2] / fib[n]) * (upper_boundary - lower_boundary)
-    x2 = lower_boundary + (fib[n - 1] / fib[n]) * (upper_boundary - lower_boundary)
-    f1 = f(x1)
-    f2 = f(x2)
+# Define symbolic variable
+x = sp.symbols('x')
 
-    # Main loop
-    for i in range(1, n - 1):
-        if f1 < f2:
-            upper_boundary = x2
-            x2 = x1
-            f2 = f1
-            x1 = lower_boundary + (fib[n - i - 2] / fib[n - i]) * (upper_boundary - lower_boundary)
-            f1 = f(x1)
-        else:
-            lower_boundary = x1
-            x1 = x2
-            f1 = f2
-            x2 = lower_boundary + (fib[n - i - 1] / fib[n - i]) * (upper_boundary - lower_boundary)
-            f2 = f(x2)
+# Define the test functions grouped by their type
+test_functions = {
+    'Quadratic': [x ** 2 - 4 * x + 4, x ** 2 + 4 * x + 4, 3 * x ** 2 - 3 * x + 1, -x ** 2 + 2 * x - 1,
+                  0.5 * x ** 2 - 5 * x + 12],
+    'Cubic': [x ** 3 - 3 * x ** 2 + 3 * x - 1, -x ** 3 + 6 * x ** 2 - 9 * x + 4, 2 * x ** 3 - 6 * x ** 2 + 4 * x,
+              x ** 3 + x ** 2 - 4 * x - 4, 4 * x ** 3 - 12 * x ** 2 + 9 * x - 2],
+    'Quartic': [x ** 4 - 4 * x ** 3 + 6 * x ** 2 - 4 * x + 1, -2 * x ** 4 + 8 * x ** 3 - 12 * x ** 2 + 8 * x - 2,
+                0.5 * x ** 4 - x ** 3 - 3.5 * x ** 2 + 2 * x + 10, x ** 4 + 2 * x ** 3 - 13 * x ** 2 + 14 * x - 24,
+                3 * x ** 4 - 6 * x ** 3 + 3 * x ** 2 - 6 * x + 2]
+}
 
 
-    # Determine the final interval and return the middle point as the minimum
-    if f1 < f2:
-        minimum = (lower_boundary + x2) / 2
-    else:
-        minimum = (x1 + upper_boundary) / 2
-
-    return minimum
-
-
-def bisection1(fun, a, b, d, e):
-    k = 0
-    kf = 0
-    while abs(a - b) > e:
-        x1 = (a + b) / 2
-        u1 = x1 - d
-        u2 = x1 + d
-        if fun(u1) < fun(u2):
-            b = u2
-        else:
-            a = u1
-        k += 1
-        kf += 2
-
-    return a, b, k, kf
-
-# Example usage with a simple quadratic function
-def example_function(x):
+def fun(x):
     return x ** 4 / 20 + x / 4 + 1
 
 
-# Find the minimum of the function on the interval [0, 4]
-a = -2
-b = 2
-n = 100  # Number of iterations
+# Define initial points and parameters
+initial_points = [0, 1, 2]
+precision = 1e-6
+max_iterations = 1000
 
-min_point = fibonacci_search(example_function, a, b, n)
-print("The minimum point is at x =", min_point)
+# Test each function with each optimization method
+results = {}
+for name, func in test_functions.items():
+    results[name] = {}
+    for point in initial_points:
+        results[name][point] = {}
 
+        # Newton's method
+        start_time = time.time()
+        x_opt, f_val, iterations = PointOptimizationMethods.newtons_method(func, point, precision, max_iterations)
+        elapsed_time = time.time() - start_time
+        results[name][point]['Newton'] = (x_opt, f_val, iterations, elapsed_time)
 
-def bisection1(fun, a, b, d, e):
-    k = 0
-    kf = 0
-    while abs(a - b) > e:
-        x1 = (a + b) / 2
-        u1 = x1 - d
-        u2 = x1 + d
-        f_u1 = fun(u1)
-        f_u2 = fun(u2)
+        # Gradient method
+        start_time = time.time()
+        x_opt, f_val, iterations = PointOptimizationMethods.gradient_method(fun, point, max_iterations, precision)
+        elapsed_time = time.time() - start_time
+        results[name][point]['Gradient'] = (x_opt, f_val, iterations, elapsed_time)
 
+        # Random search
+        start_time = time.time()
+        x_opt, f_val, iterations = PointOptimizationMethods.random_search(func, point, precision, 1, max_iterations,
+                                                                          True)
+        elapsed_time = time.time() - start_time
+        results[name][point]['Random'] = (x_opt, f_val, iterations, elapsed_time)
 
-        if f_u1 < f_u2:
-            b = x1  # Narrow down towards x1 from the right
-        else:
-            a = x1  # Narrow down towards x1 from the left
+# Display results
+for func_name, points in results.items():
+    print(f"Results for {func_name}:")
+    for point, methods in points.items():
+        print(f"  Starting from point {point}:")
+        for method, result in methods.items():
+            print(
+                f"    {method}: Optimal x = {result[0]}, Function value = {result[1]}, Iterations = {result[2]}, Time = {result[3]:.4f}s")
 
-        k += 1
-        kf += 2
+# Define function types
+function_types = {
+    'Quadratic': ['Quadratic 1', 'Quadratic 2', 'Quadratic 3', 'Quadratic 4', 'Quadratic 5'],
+    'Cubic': ['Cubic 1', 'Cubic 2', 'Cubic 3', 'Cubic 4', 'Cubic 5'],
+    'Quartic': ['Quartic 1', 'Quartic 2', 'Quartic 3', 'Quartic 4', 'Quartic 5']
+}
 
-    x = (a + b) / 2
-    y = fun(x)
-    return x, y, k, kf
+# Initialize dictionary to store average times
+average_times = {ftype: {'Newton': 0, 'Gradient': 0, 'Random': 0} for ftype in function_types}
 
+# Aggregate the times for each method across functions of the same type
+for ftype, fnames in function_types.items():
+    num_functions = len(fnames)
+    for fname in fnames:
+        for point in results[fname]:
+            for method in results[fname][point]:
+                average_times[ftype][method] += results[fname][point][method][3] / num_functions
 
-# Example usage:
-def sample_function(x):
-    return (x - 2) ** 2
+# Plotting
+fig, ax = plt.subplots()
+index = np.arange(len(function_types))
+bar_width = 0.25
+opacity = 0.8
 
+# Create bars for each method
+for i, method in enumerate(['Newton', 'Gradient', 'Random']):
+    execution_times = [average_times[ftype][method] for ftype in function_types]
+    ax.bar(index + i * bar_width, execution_times, bar_width, alpha=opacity, label=method)
 
-x, y, k, kf = bisection1(example_function, -2, 4, 0.1, 0.01)
-print("Minimum x:", x)
-print("Minimum y:", y)
-print("Iterations:", k)
-print("Function evaluations:", kf)
+# Labeling and aesthetics
+ax.set_xlabel('Function Type')
+ax.set_ylabel('Average Execution Time (s)')
+ax.set_title('Average Optimization Execution Time by Function Type and Method')
+ax.set_xticks(index + bar_width / 2 * (len(average_times) - 1))
+ax.set_xticklabels(function_types.keys())
+ax.legend()
 
-
+fig.tight_layout()
+plt.show()
