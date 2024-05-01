@@ -31,8 +31,6 @@ function_types = {
     'Quartic': ['Quartic 1', 'Quartic 2', 'Quartic 3', 'Quartic 4', 'Quartic 5']
 }
 
-def fun(x):
-    return x ** 4 / 20 + x / 4 + 1
 
 # Define initial points and parameters
 initial_points = [0, 1, 2]
@@ -54,7 +52,7 @@ for name, func in test_functions.items():
 
         # Gradient method
         start_time = time.time()
-        x_opt, f_val, iterations = PointOptimizationMethods.gradient_method(fun, point, max_iterations, precision)
+        x_opt, f_val, iterations = PointOptimizationMethods.gradient_method(func, point, max_iterations, precision)
         elapsed_time = time.time() - start_time
         results[name][point]['Gradient'] = (x_opt, f_val, iterations, elapsed_time)
 

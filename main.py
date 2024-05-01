@@ -7,10 +7,6 @@ if __name__ == '__main__':
     f = x ** 4 / 20 + x / 4 + 1
 
 
-    def fun(x):
-        return x ** 4 / 20 + x / 4 + 1
-
-
     x_optimal_newton, best_function_value_newton, iterations_newton = PointOptimizationMethods.newtons_method(f, x_k=3)
     print("Newton's Method:")
     print("Optimal value (x):", x_optimal_newton)
@@ -19,7 +15,7 @@ if __name__ == '__main__':
     print()
 
     x_optimal_gradient, best_function_value_gradient, iterations_gradient = PointOptimizationMethods.gradient_method(
-        fun, uk=3)
+        f, uk=3)
     print("Gradient Descent Method:")
     print("Optimal value (x):", x_optimal_gradient)
     print("Best function value:", best_function_value_gradient)
@@ -35,14 +31,14 @@ if __name__ == '__main__':
     print()
 
     x_optimal_golden, best_function_value_golden, iterations_golden = IntervalOptimizationMethods.golden_ratio_optimization(
-        fun, a=-2, b=2)
+        f, a=-2, b=2)
     print("Golden Ratio Optimization Method:")
     print("Optimal value (x):", x_optimal_golden)
     print("Best function value:", best_function_value_golden)
     print("Iterations:", iterations_golden)
     print()
 
-    minimum_fibonacci, x_fibonacci, iterations_fibonacci = IntervalOptimizationMethods.fibonacci_optimization(fun,
+    minimum_fibonacci, x_fibonacci, iterations_fibonacci = IntervalOptimizationMethods.fibonacci_optimization(f,
                                                                                                               lower_bound=-2,
                                                                                                               upper_bound=2,
                                                                                                               tolerance=1e-6)
@@ -52,7 +48,7 @@ if __name__ == '__main__':
     print("Iterations:", iterations_fibonacci)
     print()
 
-    x_min_bisection, minimum_bisection, iterations_bisection = IntervalOptimizationMethods.bisection_optimization(fun,
+    x_min_bisection, minimum_bisection, iterations_bisection = IntervalOptimizationMethods.bisection_optimization(f,
                                                                                                                   a=-2,
                                                                                                                   b=2,
                                                                                                                   delta=0.1,

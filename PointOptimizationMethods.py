@@ -65,7 +65,7 @@ class PointOptimizationMethods:
         - i: Number of iterations.
         """
         x = sp.symbols('x')
-        f = fun(x)
+        f = fun
         gradient = sp.diff(f, x)
         gradient_fun = sp.lambdify(x, gradient, 'numpy')
         fun = sp.lambdify(x, f, 'numpy')

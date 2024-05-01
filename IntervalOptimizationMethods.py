@@ -1,6 +1,6 @@
 import numpy as np
 from typing import Callable, Tuple
-
+import sympy as sp
 
 class IntervalOptimizationMethods:
     @staticmethod
@@ -20,8 +20,11 @@ class IntervalOptimizationMethods:
         - best_function_value: The minimum value of the function.
         - iterations: Number of iterations performed.
         """
+        x = sp.symbols("x")
         # Golden ratio constant
         golden_ratio = (np.sqrt(5) - 1) / 2
+
+        f = sp.lambdify(x, func, 'numpy')
 
         # Initial points
         x1 = a + (1 - golden_ratio) * (b - a)
@@ -31,8 +34,8 @@ class IntervalOptimizationMethods:
         while abs(b - a) > tolerance:
             iterations += 1
             # Calculate function values at x1 and x2
-            f_x1 = func(x1)
-            f_x2 = func(x2)
+            f_x1 = f(x1)
+            f_x2 = f(x2)
 
             # Choose the new interval
             if f_x1 < f_x2:
@@ -46,7 +49,7 @@ class IntervalOptimizationMethods:
 
         # Return the midpoint of the final interval
         x_optimal = (a + b) / 2
-        best_function_value = func(x_optimal)
+        best_function_value = f(x_optimal)
         return x_optimal, best_function_value, iterations
 
     @staticmethod
@@ -72,8 +75,10 @@ class IntervalOptimizationMethods:
 
         x1 = lower_bound + (fib[n - 2] / fib[n]) * (upper_bound - lower_bound)
         x2 = lower_bound + (fib[n - 1] / fib[n]) * (upper_bound - lower_bound)
-        f1 = func(x1)
-        f2 = func(x2)
+        x = sp.symbols("x")
+        f = sp.lambdify(x, func, modules='numpy')
+        f1 = f(x1)
+        f2 = f(x2)
 
         iterations = 0
         while (upper_bound - lower_bound) > tolerance and iterations < n - 2:
@@ -83,16 +88,16 @@ class IntervalOptimizationMethods:
                 x2 = x1
                 f2 = f1
                 x1 = lower_bound + (fib[n - iterations - 2] / fib[n - iterations]) * (upper_bound - lower_bound)
-                f1 = func(x1)
+                f1 = f(x1)
             else:
                 lower_bound = x1
                 x1 = x2
                 f1 = f2
                 x2 = lower_bound + (fib[n - iterations - 1] / fib[n - iterations]) * (upper_bound - lower_bound)
-                f2 = func(x2)
+                f2 = f(x2)
 
         x_min = (x1 + x2) / 2
-        minimum = func(x_min)
+        minimum = f(x_min)
         return x_min, minimum, iterations
 
     @staticmethod
@@ -113,17 +118,19 @@ class IntervalOptimizationMethods:
         Returns:
         Tuple[float, float, int]: Minimum x-value, minimum function value, and number of iterations.
         """
+        x = sp.symbols('x')
+        f = sp.lambdify(x, func, modules='numpy')
         iterations = 0
         while abs(a - b) > epsilon:
             mid = (a + b) / 2
             left = mid - delta
             right = mid + delta
-            if func(left) < func(right):
+            if f(left) < f(right):
                 b = mid
             else:
                 a = mid
             iterations += 1
 
         x_min = (a + b) / 2
-        minimum = func(x_min)
+        minimum = f(x_min)
         return x_min, minimum, iterations
