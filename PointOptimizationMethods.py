@@ -47,7 +47,7 @@ class PointOptimizationMethods:
 
     @staticmethod
     def gradient_method(fun: sp.Expr, uk: float, max_iterations: int = 1000, tolerance: float = 1e-6,
-                        alpha: float = 0.01, beta: float = 0.5) -> tuple:
+                        alpha: float = 0.01, beta: float = 0.5, max_value: float = 1e20) -> tuple:
         """
         Gradient descent method for optimization.
 
@@ -58,6 +58,7 @@ class PointOptimizationMethods:
         - tolerance: Tolerance for convergence.
         - alpha: Coefficient for line search.
         - beta: Reduction factor for step size.
+        - max_value: Maximum allowed absolute value for uk.
 
         Returns:
         - uk: Optimal value.
@@ -82,6 +83,9 @@ class PointOptimizationMethods:
             if np.linalg.norm(grad_val) < tolerance:
                 break
             i += 1
+
+            if abs(uk) > max_value:
+                return None, None, None
 
         return uk, fun(uk), i
 
