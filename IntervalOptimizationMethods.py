@@ -2,6 +2,7 @@ import numpy as np
 from typing import Callable, Tuple
 
 
+
 class IntervalOptimizationMethods:
     @staticmethod
     def golden_ratio_optimization(func: Callable, a: float, b: float, tolerance: float = 1e-6) -> Tuple[
@@ -50,22 +51,20 @@ class IntervalOptimizationMethods:
         return x_optimal, best_function_value, iterations
 
     @staticmethod
-    def fibonacci_optimization(func: Callable, lower_bound: float, upper_bound: float,
-                               tolerance: float = 1e-4, n: int = 100) -> Tuple[float, float, int]:
+    def fibonacci_optimization(func: Callable, lower_bound: float, upper_bound: float, tolerance: float = 1e-6, n: int = 100) -> Tuple[float, float, int]:
         """
-        Fibonacci Search method for finding the minimum of a function.
+        Fibonacci Search method for finding the minimum of a function. This method uses Fibonacci
+        numbers to progressively narrow the search interval.
 
         Parameters:
-        - func: The objective function to minimize.
-        - lower_boundary: The lower boundary of the initial interval.
-        - upper_boundary: The upper boundary of the initial interval.
-        - tolerance: The tolerance for the minimum value.
-        - n: The number of Fibonacci numbers to generate.
+        - func (Callable): The objective function to minimize.
+        - lower_bound (float): The lower boundary of the initial interval.
+        - upper_bound (float): The upper boundary of the initial interval.
+        - tolerance (float): The tolerance for the minimum value.
+        - n (int): The number of Fibonacci numbers to generate.
 
         Returns:
-        - minimum: The minimum value of the function.
-        - x_min: The x-value corresponding to the minimum of the function.
-        - iterations: Number of iterations performed.
+        Tuple[float, float, int]: Optimal x-value, minimum function value, and number of iterations.
         """
         fib = [0, 1]
         for i in range(2, n + 1):
@@ -77,7 +76,7 @@ class IntervalOptimizationMethods:
         f2 = func(x2)
 
         iterations = 0
-        while abs(upper_bound - lower_bound) > tolerance:
+        while (upper_bound - lower_bound) > tolerance and iterations < n-2:
             iterations += 1
             if f1 < f2:
                 upper_bound = x2
@@ -92,11 +91,39 @@ class IntervalOptimizationMethods:
                 x2 = lower_bound + (fib[n - iterations - 1] / fib[n - iterations]) * (upper_bound - lower_bound)
                 f2 = func(x2)
 
-        if f1 < f2:
-            minimum = (lower_bound + x2) / 2
-            x_min = x1
-        else:
-            minimum = (x1 + upper_bound) / 2
-            x_min = x2
+        x_min = (x1 + x2) / 2
+        minimum = func(x_min)
+        return x_min, minimum, iterations
 
-        return minimum, x_min, iterations
+    @staticmethod
+    def bisection_optimization(func: Callable, a: float, b: float, delta: float, epsilon: float) -> Tuple[float, float, int]:
+        """
+        Bisection method for finding the minimum of a function. This method evaluates
+        the function at points around the midpoint of the interval, adjusting the interval
+        based on which side yields a smaller function value.
+
+        Parameters:
+        - func (Callable): The objective function to minimize.
+        - a (float): The left endpoint of the interval.
+        - b (float): The right endpoint of the interval.
+        - delta (float): The distance to shift from the midpoint for function evaluation.
+        - epsilon (float): The tolerance for convergence.
+
+        Returns:
+        Tuple[float, float, int]: Minimum x-value, minimum function value, and number of iterations.
+        """
+        iterations = 0
+        while abs(a - b) > epsilon:
+            mid = (a + b) / 2
+            left = mid - delta
+            right = mid + delta
+            if func(left) < func(right):
+                b = mid
+            else:
+                a = mid
+            iterations += 1
+
+        x_min = (a + b) / 2
+        minimum = func(x_min)
+        return x_min, minimum, iterations
+
