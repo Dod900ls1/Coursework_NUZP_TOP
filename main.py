@@ -6,7 +6,6 @@ if __name__ == '__main__':
     x = sp.symbols('x')
     f = x ** 4 / 20 + x / 4 + 1
 
-
     x_optimal_newton, best_function_value_newton, iterations_newton = PointOptimizationMethods.newtons_method(f, x_k=3)
     print("Newton's Method:")
     print("Optimal value (x):", x_optimal_newton)

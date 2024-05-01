@@ -2,6 +2,7 @@ import numpy as np
 from typing import Callable, Tuple
 import sympy as sp
 
+
 class IntervalOptimizationMethods:
     @staticmethod
     def golden_ratio_optimization(func: Callable, a: float, b: float, tolerance: float = 1e-6) -> Tuple[

@@ -5,7 +5,6 @@ from IntervalOptimizationMethods import IntervalOptimizationMethods
 import matplotlib.pyplot as plt
 import numpy as np
 
-
 # Define the test functions
 x = sp.symbols('x')
 test_functions = {
@@ -54,17 +53,20 @@ for name, func in test_functions.items():
         interval_results[name][interval] = {}
 
         start_time = time.time()
-        x_opt, f_val, iterations = IntervalOptimizationMethods.golden_ratio_optimization(func, *interval, interval_precision)
+        x_opt, f_val, iterations = IntervalOptimizationMethods.golden_ratio_optimization(func, *interval,
+                                                                                         interval_precision)
         elapsed_time = time.time() - start_time
         interval_results[name][interval]['GoldenRatio'] = (x_opt, f_val, iterations, elapsed_time)
 
         start_time = time.time()
-        x_opt, f_val, iterations = IntervalOptimizationMethods.fibonacci_optimization(func, *interval, interval_precision)
+        x_opt, f_val, iterations = IntervalOptimizationMethods.fibonacci_optimization(func, *interval,
+                                                                                      interval_precision)
         elapsed_time = time.time() - start_time
         interval_results[name][interval]['Fibonacci'] = (x_opt, f_val, iterations, elapsed_time)
 
         start_time = time.time()
-        x_opt, f_val, iterations = IntervalOptimizationMethods.bisection_optimization(func, *interval, delta=0.1, epsilon=interval_precision)
+        x_opt, f_val, iterations = IntervalOptimizationMethods.bisection_optimization(func, *interval, delta=0.1,
+                                                                                      epsilon=interval_precision)
         elapsed_time = time.time() - start_time
         interval_results[name][interval]['Bisection'] = (x_opt, f_val, iterations, elapsed_time)
 
@@ -78,12 +80,14 @@ for name, func in test_functions.items():
         point_results[name][point]['Newton'] = (x_opt, f_val, iterations, elapsed_time)
 
         start_time = time.time()
-        x_opt, f_val, iterations = PointOptimizationMethods.gradient_method(func, point, max_iterations, point_precision)
+        x_opt, f_val, iterations = PointOptimizationMethods.gradient_method(func, point, max_iterations,
+                                                                            point_precision)
         elapsed_time = time.time() - start_time
         point_results[name][point]['Gradient'] = (x_opt, f_val, iterations, elapsed_time)
 
         start_time = time.time()
-        x_opt, f_val, iterations = PointOptimizationMethods.random_search(func, point, point_precision, 1, max_iterations, True)
+        x_opt, f_val, iterations = PointOptimizationMethods.random_search(func, point, point_precision, 1,
+                                                                          max_iterations, True)
         elapsed_time = time.time() - start_time
         point_results[name][point]['Random'] = (x_opt, f_val, iterations, elapsed_time)
 
