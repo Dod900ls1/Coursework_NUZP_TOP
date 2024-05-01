@@ -1,28 +1,38 @@
 import time
 import sympy as sp
 from PointOptimizationMethods import PointOptimizationMethods
-from IntervalOptimizationMethods import IntervalOptimizationMethods
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Define symbolic variable
-x = sp.symbols('x')
 
-# Define the test functions grouped by their type
+# Define the test functions
+x = sp.symbols('x')
 test_functions = {
-    'Quadratic': [x ** 2 - 4 * x + 4, x ** 2 + 4 * x + 4, 3 * x ** 2 - 3 * x + 1, -x ** 2 + 2 * x - 1,
-                  0.5 * x ** 2 - 5 * x + 12],
-    'Cubic': [x ** 3 - 3 * x ** 2 + 3 * x - 1, -x ** 3 + 6 * x ** 2 - 9 * x + 4, 2 * x ** 3 - 6 * x ** 2 + 4 * x,
-              x ** 3 + x ** 2 - 4 * x - 4, 4 * x ** 3 - 12 * x ** 2 + 9 * x - 2],
-    'Quartic': [x ** 4 - 4 * x ** 3 + 6 * x ** 2 - 4 * x + 1, -2 * x ** 4 + 8 * x ** 3 - 12 * x ** 2 + 8 * x - 2,
-                0.5 * x ** 4 - x ** 3 - 3.5 * x ** 2 + 2 * x + 10, x ** 4 + 2 * x ** 3 - 13 * x ** 2 + 14 * x - 24,
-                3 * x ** 4 - 6 * x ** 3 + 3 * x ** 2 - 6 * x + 2]
+    'Quadratic 1': x ** 2 - 8 * x + 8,
+    'Quadratic 2': x ** 2 + 4 * x + 4,
+    'Quadratic 3': 3 * x ** 2 - 3 * x + 1,
+    'Quadratic 4': -x ** 2 + 2 * x - 1,
+    'Quadratic 5': 0.5 * x ** 2 - 5 * x + 12,
+    'Cubic 1': x ** 3 - 3 * x ** 2 + 3 * x - 1,
+    'Cubic 2': -x ** 3 + 6 * x ** 2 - 9 * x + 4,
+    'Cubic 3': 2 * x ** 3 - 6 * x ** 2 + 4 * x,
+    'Cubic 4': x ** 3 + x ** 2 - 4 * x - 4,
+    'Cubic 5': 4 * x ** 3 - 12 * x ** 2 + 9 * x - 2,
+    'Quartic 1': x ** 4 - 4 * x ** 3 + 6 * x ** 2 - 4 * x + 1,
+    'Quartic 2': -2 * x ** 4 + 8 * x ** 3 - 12 * x ** 2 + 8 * x - 2,
+    'Quartic 3': 0.5 * x ** 4 - x ** 3 - 3.5 * x ** 2 + 2 * x + 10,
+    'Quartic 4': x ** 4 + 2 * x ** 3 - 13 * x ** 2 + 14 * x - 24,
+    'Quartic 5': 3 * x ** 4 - 6 * x ** 3 + 3 * x ** 2 - 6 * x + 2
 }
 
+function_types = {
+    'Quadratic': ['Quadratic 1', 'Quadratic 2', 'Quadratic 3', 'Quadratic 4', 'Quadratic 5'],
+    'Cubic': ['Cubic 1', 'Cubic 2', 'Cubic 3', 'Cubic 4', 'Cubic 5'],
+    'Quartic': ['Quartic 1', 'Quartic 2', 'Quartic 3', 'Quartic 4', 'Quartic 5']
+}
 
 def fun(x):
     return x ** 4 / 20 + x / 4 + 1
-
 
 # Define initial points and parameters
 initial_points = [0, 1, 2]
@@ -63,6 +73,7 @@ for func_name, points in results.items():
         for method, result in methods.items():
             print(
                 f"    {method}: Optimal x = {result[0]}, Function value = {result[1]}, Iterations = {result[2]}, Time = {result[3]:.4f}s")
+
 
 # Define function types
 function_types = {
