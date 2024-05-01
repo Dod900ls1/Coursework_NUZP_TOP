@@ -46,3 +46,12 @@ if __name__ == '__main__':
     print("Optimal value (x):", x_optimal_golden)
     print("Best function value:", best_function_value_golden)
     print("Iterations:", iterations_golden)
+    print()
+
+    # Fibonacci optimization method
+    evaluations_fibonacci, optimal_point_fibonacci, iterations_fibonacci = IntervalOptimizationMethods.fibonacci_optimization(
+        fun, lower_bound=2, upper_bound=-2, tolerance=1e-6)
+    print("Fibonacci Optimization Method:")
+    print("Optimal value (x):", optimal_point_fibonacci)
+    print("Best function value:", evaluations_fibonacci)
+    print("Iterations:", iterations_fibonacci)
