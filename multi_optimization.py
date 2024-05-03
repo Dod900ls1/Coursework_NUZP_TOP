@@ -22,14 +22,23 @@ test_functions = {
     'Quartic 2': -2 * x ** 4 + 8 * x ** 3 - 12 * x ** 2 + 8 * x - 2,
     'Quartic 3': 0.5 * x ** 4 - x ** 3 - 3.5 * x ** 2 + 2 * x + 10,
     'Quartic 4': x ** 4 + 2 * x ** 3 - 13 * x ** 2 + 14 * x - 24,
-    'Quartic 5': 3 * x ** 4 - 6 * x ** 3 + 3 * x ** 2 - 6 * x + 2
+    'Quartic 5': 3 * x ** 4 - 6 * x ** 3 + 3 * x ** 2 - 6 * x + 2,
+    'Exponential 1': sp.exp(-x) + x,
+    'Exponential 2': 2 ** x - x ** 2,
+    'Exponential 3': x * sp.exp(-x),
+    'Logarithmic 1': sp.log(x) - x,
+    'Logarithmic 2': x * sp.log(x) - x,
+    'Logarithmic 3': sp.log(x) + x ** 2
 }
 
 function_types = {
     'Quadratic': ['Quadratic 1', 'Quadratic 2', 'Quadratic 3', 'Quadratic 4', 'Quadratic 5'],
     'Cubic': ['Cubic 1', 'Cubic 2', 'Cubic 3', 'Cubic 4', 'Cubic 5'],
-    'Quartic': ['Quartic 1', 'Quartic 2', 'Quartic 3', 'Quartic 4', 'Quartic 5']
+    'Quartic': ['Quartic 1', 'Quartic 2', 'Quartic 3', 'Quartic 4', 'Quartic 5'],
+    'Exponential': ['Exponential 1', 'Exponential 2', 'Exponential 3'],
+    'Logarithmic': ['Logarithmic 1', 'Logarithmic 2', 'Logarithmic 3']
 }
+
 
 # Define initial intervals and parameters for interval optimization
 initial_intervals = [(0, 1), (1, 2), (2, 3)]
