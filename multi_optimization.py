@@ -23,12 +23,12 @@ test_functions = {
     'Quartic 3': 0.5 * x ** 4 - x ** 3 - 3.5 * x ** 2 + 2 * x + 10,
     'Quartic 4': x ** 4 + 2 * x ** 3 - 13 * x ** 2 + 14 * x - 24,
     'Quartic 5': 3 * x ** 4 - 6 * x ** 3 + 3 * x ** 2 - 6 * x + 2,
-    'Exponential 1': sp.exp(-x) + x,
+    'Exponential 1': sp.exp(x**2),
     'Exponential 2': 2 ** x - x ** 2,
-    'Exponential 3': x * sp.exp(-x),
-    'Logarithmic 1': sp.log(x) - x,
-    'Logarithmic 2': x * sp.log(x) - x,
-    'Logarithmic 3': sp.log(x) + x ** 2
+    'Exponential 3': 2 ** x * 9*x**2,
+    'Logarithmic 1': sp.log(sp.exp(x**2) + x + 1),
+    'Logarithmic 2': x * sp.log(x) - x ** 0.5,
+    'Logarithmic 3': x*sp.log(x) + x ** 2
 }
 
 function_types = {
