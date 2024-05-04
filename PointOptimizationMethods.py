@@ -10,6 +10,19 @@ class PointOptimizationMethods:
 
     @staticmethod
     def newtons_method(f: sp.Expr, x_k: float, precision: float = 1e-6, max_iterations: int = 100) -> tuple:
+        """
+        Newton's method for finding a local minimum of a function.
+
+        Args:
+        - f (sp.Expr): The Sympy expression of the function to be minimized.
+        - x_k (float): Initial guess for the minimum point.
+        - precision (float): Precision for convergence.
+        - max_iterations (int): Maximum number of iterations to perform.
+
+        Returns:
+        - tuple: (x_k, f(x_k), iterations) where x_k is the approximate minimum,
+                 f(x_k) is the function value at x_k, and iterations is the number of iterations performed.
+        """
         x = sp.symbols('x')
         f_prime = sp.diff(f, x)
         f_double_prime = sp.diff(f_prime, x)
@@ -46,21 +59,20 @@ class PointOptimizationMethods:
     def gradient_method(fun: sp.Expr, uk: float, max_iterations: int = 1000, tolerance: float = 1e-6,
                         alpha: float = 0.01, beta: float = 0.5, max_value: float = 1e20) -> tuple:
         """
-        Gradient descent method for optimization.
+        Gradient descent method for optimizing a function.
 
         Args:
-        - fun: The function to optimize.
-        - uk: Initial guess for the optimal value.
-        - max_iterations: Maximum number of iterations.
-        - tolerance: Tolerance for convergence.
-        - alpha: Coefficient for line search.
-        - beta: Reduction factor for step size.
-        - max_value: Maximum allowed absolute value for uk.
+        - fun (sp.Expr): The function to optimize, represented as a Sympy expression.
+        - uk (float): Initial guess for the minimum value.
+        - max_iterations (int): Maximum allowed iterations.
+        - tolerance (float): Convergence tolerance.
+        - alpha (float): Coefficient for the line search.
+        - beta (float): Reduction factor for step size during line search.
+        - max_value (float): Maximum allowed value for uk to prevent overflow.
 
         Returns:
-        - uk: Optimal value.
-        - best_function_value: Best function value
-        - i: Number of iterations.
+        - tuple: (uk, best_function_value, iterations) where uk is the optimized variable,
+                 best_function_value is the function value at uk, and iterations is the number of iterations used.
         """
         x = sp.symbols('x')
         f = fun
@@ -95,20 +107,19 @@ class PointOptimizationMethods:
                       max_iterations: int = 1000,
                       shrink_step: bool = False) -> tuple:
         """
-        Random search method for function optimization starting from an initial point.
+        Random search method for optimizing a function starting from an initial guess.
 
         Args:
-        - fun_expr: The Sympy expression of the function to optimize.
-        - x_k: Initial guess for the optimal value.
-        - tolerance: Tolerance for convergence.
-        - step_size: Initial magnitude of the random steps.
-        - max_iterations: Maximum number of iterations.
-        - shrink_step: Boolean to decide if the step size should decrease over iterations.
+        - fun_expr (sp.Expr): Sympy expression of the function to optimize.
+        - x_k (float): Initial guess for the optimal value.
+        - tolerance (float): Tolerance for convergence.
+        - step_size (float): Magnitude of the initial random steps.
+        - max_iterations (int): Maximum number of iterations.
+        - shrink_step (bool): Whether to decrease step size over iterations.
 
         Returns:
-        - x_k: The x value that resulted in the lowest function value.
-        - best_fun_val: The lowest function value found.
-        - iterations: The number of iterations performed.
+        - tuple: (x_k, best_fun_val, iterations) where x_k is the optimized variable,
+                 best_fun_val is the function value at x_k, and iterations is the number of iterations performed.
         """
         x = sp.symbols('x')
         fun_lambdified = sp.lambdify(x, fun_expr, 'numpy')

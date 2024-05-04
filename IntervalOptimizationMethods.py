@@ -4,22 +4,27 @@ import sympy as sp
 
 
 class IntervalOptimizationMethods:
+    """
+    A class that provides various methods for optimizing a function over a specified interval. These methods are designed
+    to find the local minimum of a function within given bounds. The class implements three different interval optimization
+    techniques: Golden Ratio Optimization, Fibonacci Search, and Bisection Method.
+    """
+
     @staticmethod
     def golden_ratio_optimization(func: Callable, a: float, b: float, tolerance: float = 1e-6) -> Tuple[
         float, float, int]:
         """
-        Golden Ratio Optimization method for finding the minimum of a unimodal function.
+        Implements the Golden Ratio Optimization method to find the minimum of a unimodal function within a specified interval.
 
         Parameters:
-        - func: The objective function to minimize.
-        - a: The left endpoint of the initial interval.
-        - b: The right endpoint of the initial interval.
-        - tolerance: The tolerance for the minimum value.
+        - func (Callable): The function to minimize.
+        - a (float): The lower boundary of the search interval.
+        - b (float): The upper boundary of the search interval.
+        - tolerance (float): The precision tolerance of the search (default is 1e-6).
 
         Returns:
-        - x_optimal: The x-value corresponding to the minimum of the function.
-        - best_function_value: The minimum value of the function.
-        - iterations: Number of iterations performed.
+        Tuple[float, float, int]: A tuple containing the estimated x-value at the minimum (float), the minimum value of the function
+                                  at that x-value (float), and the number of iterations performed (int).
         """
         x = sp.symbols("x")
         # Golden ratio constant
@@ -57,18 +62,18 @@ class IntervalOptimizationMethods:
     def fibonacci_optimization(func: Callable, lower_bound: float, upper_bound: float, tolerance: float = 1e-6,
                                n: int = 100) -> Tuple[float, float, int]:
         """
-        Fibonacci Search method for finding the minimum of a function. This method uses Fibonacci
-        numbers to progressively narrow the search interval.
+        Utilizes Fibonacci numbers to determine the minimum of a function within an interval by progressively narrowing the range of search.
 
         Parameters:
-        - func (Callable): The objective function to minimize.
-        - lower_bound (float): The lower boundary of the initial interval.
-        - upper_bound (float): The upper boundary of the initial interval.
-        - tolerance (float): The tolerance for the minimum value.
-        - n (int): The number of Fibonacci numbers to generate.
+        - func (Callable): The function to minimize.
+        - lower_bound (float): The start of the interval.
+        - upper_bound (float): The end of the interval.
+        - tolerance (float): The convergence tolerance.
+        - n (int): The number of Fibonacci iterations to perform (default is 100).
 
         Returns:
-        Tuple[float, float, int]: Optimal x-value, minimum function value, and number of iterations.
+        Tuple[float, float, int]: A tuple containing the x-value where the function is minimized (float), the function's minimum value
+                                  at that x-value (float), and the number of iterations (int).
         """
         fib = [0, 1]
         for i in range(2, n + 1):
@@ -105,19 +110,19 @@ class IntervalOptimizationMethods:
     def bisection_optimization(func: Callable, a: float, b: float, delta: float, epsilon: float) -> Tuple[
         float, float, int]:
         """
-        Bisection method for finding the minimum of a function. This method evaluates
-        the function at points around the midpoint of the interval, adjusting the interval
-        based on which side yields a smaller function value.
+        The Bisection method is used to find the minimum of a function by evaluating the function at the midpoint and points slightly
+        left and right of the midpoint, then narrowing the search interval based on these evaluations.
 
         Parameters:
-        - func (Callable): The objective function to minimize.
+        - func (Callable): The function to minimize.
         - a (float): The left endpoint of the interval.
         - b (float): The right endpoint of the interval.
-        - delta (float): The distance to shift from the midpoint for function evaluation.
-        - epsilon (float): The tolerance for convergence.
+        - delta (float): The distance from the midpoint where the function is evaluated.
+        - epsilon (float): The precision tolerance of the convergence.
 
         Returns:
-        Tuple[float, float, int]: Minimum x-value, minimum function value, and number of iterations.
+        Tuple[float, float, int]: A tuple containing the x-value of the minimum (float), the minimum value of the function (float),
+                                  and the number of iterations (int) it took to converge.
         """
         x = sp.symbols('x')
         f = sp.lambdify(x, func, modules='numpy')
