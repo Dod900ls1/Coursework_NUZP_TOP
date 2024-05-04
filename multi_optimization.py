@@ -4,6 +4,7 @@ from PointOptimizationMethods import PointOptimizationMethods
 from IntervalOptimizationMethods import IntervalOptimizationMethods
 import matplotlib.pyplot as plt
 import numpy as np
+import csv
 
 # Define the test functions
 x = sp.symbols('x')
@@ -100,23 +101,6 @@ for name, func in test_functions.items():
         elapsed_time = time.time() - start_time
         point_results[name][point]['Random'] = (x_opt, f_val, iterations, elapsed_time)
 
-# Display results for interval optimization
-for func_name, intervals in interval_results.items():
-    print(f"Results for {func_name}:")
-    for interval, methods in intervals.items():
-        print(f"  Starting interval {interval}:")
-        for method, result in methods.items():
-            print(
-                f"    {method}: Optimal x = {result[0]}, Function value = {result[1]}, Iterations = {result[2]}, Time = {result[3]:.4f}s")
-
-# Display results for point optimization
-for func_name, points in point_results.items():
-    print(f"Results for {func_name}:")
-    for point, methods in points.items():
-        print(f"  Starting from point {point}:")
-        for method, result in methods.items():
-            print(
-                f"    {method}: Optimal x = {result[0]}, Function value = {result[1]}, Iterations = {result[2]}, Time = {result[3]:.4f}s")
 
 # Initialize dictionary to store average times for interval optimization
 interval_average_times = {ftype: {'GoldenRatio': 0, 'Fibonacci': 0, 'Bisection': 0} for ftype in function_types}
@@ -140,6 +124,33 @@ for ftype, fnames in function_types.items():
             for method in point_results[fname][point]:
                 point_average_times[ftype][method] += point_results[fname][point][method][3] / num_points
 
+
+def save_optimization_results():
+    with open('optimization_results.csv', 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(
+            ['Optimization Type', 'Function Name', 'Parameter', 'Method', 'Optimal x', 'Function Value', 'Iterations',
+             'Time'])
+
+        # Write interval optimization results
+        for func_name, intervals in interval_results.items():
+            for interval, methods in intervals.items():
+                for method, result in methods.items():
+                    writer.writerow(
+                        ['Interval', func_name, f"Interval {interval}", method, result[0], result[1], result[2],
+                         result[3]])
+
+        # Write point optimization results
+        for func_name, points in point_results.items():
+            for point, methods in points.items():
+                for method, result in methods.items():
+                    writer.writerow(
+                        ['Point', func_name, f"Point {point}", method, result[0], result[1], result[2], result[3]])
+
+
+# Call function to save results to CSV
+save_optimization_results()
+
 # Plotting for interval optimization
 fig, ax = plt.subplots()
 index = np.arange(len(function_types))
@@ -154,7 +165,7 @@ for i, method in enumerate(['GoldenRatio', 'Fibonacci', 'Bisection']):
 # Labeling and aesthetics for interval optimization
 ax.set_xlabel('Function Type')
 ax.set_ylabel('Average Execution Time (s)')
-ax.set_title('Average Optimization Execution Time by Function Type and Method (Interval Optimization)')
+ax.set_title('Average Optimization Execution Time (Interval Optimization)')
 ax.set_xticks(index + bar_width / 2 * (len(interval_average_times) - 1))
 ax.set_xticklabels(function_types.keys())
 ax.legend()
@@ -176,7 +187,7 @@ for i, method in enumerate(['Newton', 'Gradient', 'Random']):
 # Labeling and aesthetics for point optimization
 ax.set_xlabel('Function Type')
 ax.set_ylabel('Average Execution Time (s)')
-ax.set_title('Average Optimization Execution Time by Function Type and Method (Point Optimization)')
+ax.set_title('Average Optimization Execution Time (Point Optimization)')
 ax.set_xticks(index + bar_width / 2 * (len(point_average_times) - 1))
 ax.set_xticklabels(function_types.keys())
 ax.legend()
