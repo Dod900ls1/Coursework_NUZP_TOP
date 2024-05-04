@@ -13,27 +13,34 @@ class PointOptimizationMethods:
         x = sp.symbols('x')
         f_prime = sp.diff(f, x)
         f_double_prime = sp.diff(f_prime, x)
+        f_prime_lambdified = sp.lambdify(x, f_prime, "numpy")
+        f_double_prime_lambdified = sp.lambdify(x, f_double_prime, "numpy")
         iterations = 0
 
-        for i in range(max_iterations):
-            first_derivative_at_x = f_prime.subs(x, x_k).evalf()
-            second_derivative_at_x = f_double_prime.subs(x, x_k).evalf()
+        while iterations < max_iterations:
+            try:
+                first_derivative_at_x = f_prime_lambdified(x_k)
+                second_derivative_at_x = f_double_prime_lambdified(x_k)
 
-            if second_derivative_at_x == 0 or sp.nan == second_derivative_at_x:
-                print("Issue with the second derivative (zero or NaN). Stopping the iteration.")
+                if abs(second_derivative_at_x) < 1e-8:  # Avoid division by zero or very small values
+                    print("Near-zero or zero second derivative encountered.")
+                    break
+
+                x_k1 = x_k - first_derivative_at_x / second_derivative_at_x
+
+                if abs(x_k1 - x_k) < precision or np.isnan(x_k1):
+                    x_k = x_k1
+                    break
+
+                x_k = x_k1
+                iterations += 1
+            except Exception as e:
+                print(f"Numerical error encountered: {e}")
                 break
 
-            x_k1 = x_k - first_derivative_at_x / second_derivative_at_x
-            if sp.nan == x_k1:
-                print("NaN encountered in x_k1 calculation. Stopping the iteration.")
-                break
+        f_lambdified = sp.lambdify(x, f, "numpy")
+        return x_k, f_lambdified(x_k), iterations
 
-            if abs(x_k1 - x_k) < precision:
-                break
-            x_k = x_k1
-            iterations += 1
-
-        return float(x_k), f.subs(x, x_k).evalf(), iterations
 
     @staticmethod
     def gradient_method(fun: sp.Expr, uk: float, max_iterations: int = 1000, tolerance: float = 1e-6,
@@ -63,7 +70,11 @@ class PointOptimizationMethods:
         i = 0
 
         for k in range(max_iterations):
-            grad_val = gradient_fun(uk)
+            try:
+                grad_val = gradient_fun(uk)
+            except ZeroDivisionError:
+                print("Division by zero. Stop iteration")
+                break
             step_size = 1.0
 
             while fun(uk - step_size * grad_val) > fun(uk) - alpha * step_size * np.square(np.linalg.norm(grad_val)):
