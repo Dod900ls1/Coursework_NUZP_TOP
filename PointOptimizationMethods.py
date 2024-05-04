@@ -10,20 +10,6 @@ class PointOptimizationMethods:
 
     @staticmethod
     def newtons_method(f: sp.Expr, x_k: float, precision: float = 1e-6, max_iterations: int = 100) -> tuple:
-        """
-        Newton's method for optimization.
-
-        Args:
-        - f: The function to optimize.
-        - x_k: Initial guess for the optimal value.
-        - precision: Tolerance for convergence.
-        - max_iterations: Maximum number of iterations.
-
-        Returns:
-        - x_k: Optimal value.
-        - best_function_value: Best function value
-        - iterations: Number of iterations.
-        """
         x = sp.symbols('x')
         f_prime = sp.diff(f, x)
         f_double_prime = sp.diff(f_prime, x)
@@ -33,17 +19,21 @@ class PointOptimizationMethods:
             first_derivative_at_x = f_prime.subs(x, x_k).evalf()
             second_derivative_at_x = f_double_prime.subs(x, x_k).evalf()
 
-            if second_derivative_at_x == 0:
-                print("Division by zero. Stopping the iteration.")
+            if second_derivative_at_x == 0 or sp.nan == second_derivative_at_x:
+                print("Issue with the second derivative (zero or NaN). Stopping the iteration.")
                 break
 
             x_k1 = x_k - first_derivative_at_x / second_derivative_at_x
+            if sp.nan == x_k1:
+                print("NaN encountered in x_k1 calculation. Stopping the iteration.")
+                break
+
             if abs(x_k1 - x_k) < precision:
                 break
             x_k = x_k1
             iterations += 1
 
-        return float(x_k), f.subs(x, x_k), iterations
+        return float(x_k), f.subs(x, x_k).evalf(), iterations
 
     @staticmethod
     def gradient_method(fun: sp.Expr, uk: float, max_iterations: int = 1000, tolerance: float = 1e-6,
