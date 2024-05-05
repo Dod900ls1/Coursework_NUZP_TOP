@@ -166,4 +166,4 @@ class IntervalOptimizationMethods:
         else:
             result_status = "Success"
 
-        return  minimum, x_min, iterations, result_status
+        return  x_min, minimum, iterations, result_status

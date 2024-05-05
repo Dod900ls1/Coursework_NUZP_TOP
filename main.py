@@ -29,7 +29,7 @@ if __name__ == '__main__':
     print("Iterations:", iterations_random)
     print()
 
-    x_optimal_golden, best_function_value_golden, iterations_golden = IntervalOptimizationMethods.golden_ratio_optimization(
+    x_optimal_golden, best_function_value_golden, iterations_golden, result = IntervalOptimizationMethods.golden_ratio_optimization(
         f, lower_bound=-2, upper_bound=2)
     print("Golden Ratio Optimization Method:")
     print("Optimal value (x):", x_optimal_golden)
@@ -37,7 +37,7 @@ if __name__ == '__main__':
     print("Iterations:", iterations_golden)
     print()
 
-    minimum_fibonacci, x_fibonacci, iterations_fibonacci = IntervalOptimizationMethods.fibonacci_optimization(f,
+    minimum_fibonacci, x_fibonacci, iterations_fibonacci, result1 = IntervalOptimizationMethods.fibonacci_optimization(f,
                                                                                                               lower_bound=-2,
                                                                                                               upper_bound=2,
                                                                                                               tolerance=1e-6)
@@ -47,7 +47,7 @@ if __name__ == '__main__':
     print("Iterations:", iterations_fibonacci)
     print()
 
-    x_min_bisection, minimum_bisection, iterations_bisection = IntervalOptimizationMethods.bisection_optimization(f,
+    x_min_bisection, minimum_bisection, iterations_bisection, result2 = IntervalOptimizationMethods.bisection_optimization(f,
                                                                                                                   lower_bound=-2,
                                                                                                                   upper_bound=2,
                                                                                                                   delta=0.1,
