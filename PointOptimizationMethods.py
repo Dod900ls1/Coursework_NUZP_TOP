@@ -88,13 +88,15 @@ class PointOptimizationMethods:
         gradient_fun = sp.lambdify(x, gradient, 'numpy')
         fun = sp.lambdify(x, f, 'numpy')
         i = 0
+        result_status = "Success"
 
         for k in range(max_iterations):
             try:
                 grad_val = gradient_fun(uk)
             except ZeroDivisionError:
                 print("Division by zero. Stop iteration")
-                break
+                result_status = "Failure"
+                return None, None, None, result_status
             step_size = 1.0
 
             while fun(uk - step_size * grad_val) > fun(uk) - alpha * step_size * np.square(np.linalg.norm(grad_val)):
@@ -106,9 +108,10 @@ class PointOptimizationMethods:
             i += 1
 
             if abs(uk) > max_value:
-                return None, None, None
+                result_status = "Failure"
+                return None, None, None, result_status
 
-        return uk, fun(uk), i
+        return uk, fun(uk), i, result_status
 
     @staticmethod
     def random_search(fun_expr: sp.Expr, x_k: float, tolerance: float = 1e-6, step_size: float = 1,
