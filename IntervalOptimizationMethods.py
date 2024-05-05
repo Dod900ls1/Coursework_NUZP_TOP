@@ -153,7 +153,7 @@ class IntervalOptimizationMethods:
             mid = (lower_bound + upper_bound) / 2
             left = mid - delta
             right = mid + delta
-            if f(left) > f(right):
+            if f(left) < f(right):
                 upper_bound = mid
             else:
                 lower_bound = mid
