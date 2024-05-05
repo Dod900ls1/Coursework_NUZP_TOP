@@ -11,7 +11,7 @@ class IntervalOptimizationMethods:
     """
 
     @staticmethod
-    def golden_ratio_optimization(func: Callable, a: float, b: float, tolerance: float = 1e-6) -> Tuple[
+    def golden_ratio_optimization(func: Callable, lower_bound: float, upper_bound: float, tolerance: float = 1e-6) -> Tuple[
         float, float, int, str]:
         """
         Implements the Golden Ratio Optimization method to find the minimum of a unimodal function within a specified interval.
@@ -31,14 +31,14 @@ class IntervalOptimizationMethods:
         golden_ratio = (np.sqrt(5) - 1) / 2
 
         f = sp.lambdify(x, func, 'numpy')
-        a_init = a
-        b_init = b
+        a_init = lower_bound
+        b_init = upper_bound
         # Initial points
-        x1 = a + (1 - golden_ratio) * (b - a)
-        x2 = a + golden_ratio * (b - a)
+        x1 = lower_bound + (1 - golden_ratio) * (upper_bound - lower_bound)
+        x2 = lower_bound + golden_ratio * (upper_bound - lower_bound)
 
         iterations = 0
-        while abs(b - a) > tolerance:
+        while abs(upper_bound - lower_bound) > tolerance:
             iterations += 1
             # Calculate function values at x1 and x2
             f_x1 = f(x1)
@@ -46,16 +46,16 @@ class IntervalOptimizationMethods:
 
             # Choose the new interval
             if f_x1 < f_x2:
-                b = x2
+                upper_bound = x2
                 x2 = x1
-                x1 = a + (1 - golden_ratio) * (b - a)
+                x1 = lower_bound + (1 - golden_ratio) * (upper_bound - lower_bound)
             else:
-                a = x1
+                lower_bound = x1
                 x1 = x2
-                x2 = a + golden_ratio * (b - a)
+                x2 = lower_bound + golden_ratio * (upper_bound - lower_bound)
 
         # Return the midpoint of the final interval
-        x_min = (a + b) / 2
+        x_min = (lower_bound + upper_bound) / 2
         best_function_value = f(x_min)
 
         # Check if optimization is at a boundary
@@ -125,7 +125,7 @@ class IntervalOptimizationMethods:
         return x_min, minimum, iterations, result_status
 
     @staticmethod
-    def bisection_optimization(func: Callable, a: float, b: float, delta: float, epsilon: float) -> Tuple[
+    def bisection_optimization(func: Callable, lower_bound: float, upper_bound: float, delta: float, epsilon: float) -> Tuple[
         float, float, int]:
         """
         The Bisection method is used to find the minimum of a function by evaluating the function at the midpoint and points slightly
@@ -145,16 +145,16 @@ class IntervalOptimizationMethods:
         x = sp.symbols('x')
         f = sp.lambdify(x, func, modules='numpy')
         iterations = 0
-        while abs(a - b) > epsilon:
-            mid = (a + b) / 2
+        while abs(lower_bound - upper_bound) > epsilon:
+            mid = (lower_bound + upper_bound) / 2
             left = mid - delta
             right = mid + delta
             if f(left) < f(right):
-                b = mid
+                upper_bound = mid
             else:
-                a = mid
+                lower_bound = mid
             iterations += 1
 
-        x_min = (a + b) / 2
+        x_min = (lower_bound + upper_bound) / 2
         minimum = f(x_min)
         return x_min, minimum, iterations

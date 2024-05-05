@@ -30,7 +30,7 @@ if __name__ == '__main__':
     print()
 
     x_optimal_golden, best_function_value_golden, iterations_golden = IntervalOptimizationMethods.golden_ratio_optimization(
-        f, a=-2, b=2)
+        f, lower_bound=-2, upper_bound=2)
     print("Golden Ratio Optimization Method:")
     print("Optimal value (x):", x_optimal_golden)
     print("Best function value:", best_function_value_golden)
@@ -48,8 +48,8 @@ if __name__ == '__main__':
     print()
 
     x_min_bisection, minimum_bisection, iterations_bisection = IntervalOptimizationMethods.bisection_optimization(f,
-                                                                                                                  a=-2,
-                                                                                                                  b=2,
+                                                                                                                  lower_bound=-2,
+                                                                                                                  upper_bound=2,
                                                                                                                   delta=0.1,
                                                                                                                   epsilon=1e-6)
     print("Bisection Optimization Method:")
