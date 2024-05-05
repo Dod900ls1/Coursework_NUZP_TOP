@@ -29,19 +29,27 @@ class PointOptimizationMethods:
         f_prime_lambdified = sp.lambdify(x, f_prime, "numpy")
         f_double_prime_lambdified = sp.lambdify(x, f_double_prime, "numpy")
         iterations = 0
+        result_status = "Success"
 
         while iterations < max_iterations:
             try:
                 first_derivative_at_x = f_prime_lambdified(x_k)
                 second_derivative_at_x = f_double_prime_lambdified(x_k)
 
-                if abs(second_derivative_at_x) < 1e-8:  # Avoid division by zero or very small values
-                    print("Near-zero or zero second derivative encountered.")
+                # Check if the second derivative is inf or nan, or too close to zero
+                if np.isinf(second_derivative_at_x) or np.isnan(second_derivative_at_x) or abs(
+                        second_derivative_at_x) < 1e-8:
+                    print("Invalid second derivative encountered.")
+                    result_status = "Failure"
                     break
 
                 x_k1 = x_k - first_derivative_at_x / second_derivative_at_x
 
-                if abs(x_k1 - x_k) < precision or np.isnan(x_k1):
+                if np.isnan(x_k1):
+                    result_status = "Failure"
+                    break
+
+                if abs(x_k1 - x_k) < precision:
                     x_k = x_k1
                     break
 
@@ -49,10 +57,10 @@ class PointOptimizationMethods:
                 iterations += 1
             except Exception as e:
                 print(f"Numerical error encountered: {e}")
-                break
+                return None, None, None, "Failure"
 
         f_lambdified = sp.lambdify(x, f, "numpy")
-        return x_k, f_lambdified(x_k), iterations
+        return x_k, f_lambdified(x_k), iterations, result_status
 
 
     @staticmethod
