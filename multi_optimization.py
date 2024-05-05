@@ -76,7 +76,7 @@ for name, func in test_functions.items():
 
         start_time = time.time()
         x_opt, f_val, iterations = IntervalOptimizationMethods.bisection_optimization(func, *interval, delta=0.1,
-                                                                                      epsilon=interval_precision)
+                                                                                      tolerance=interval_precision)
         elapsed_time = time.time() - start_time
         interval_results[name][interval]['Bisection'] = (x_opt, f_val, iterations, elapsed_time)
 

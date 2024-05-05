@@ -11,7 +11,8 @@ class IntervalOptimizationMethods:
     """
 
     @staticmethod
-    def golden_ratio_optimization(func: Callable, lower_bound: float, upper_bound: float, tolerance: float = 1e-6) -> Tuple[
+    def golden_ratio_optimization(func: Callable, lower_bound: float, upper_bound: float, tolerance: float = 1e-6) -> \
+    Tuple[
         float, float, int, str]:
         """
         Implements the Golden Ratio Optimization method to find the minimum of a unimodal function within a specified interval.
@@ -125,8 +126,9 @@ class IntervalOptimizationMethods:
         return x_min, minimum, iterations, result_status
 
     @staticmethod
-    def bisection_optimization(func: Callable, lower_bound: float, upper_bound: float, delta: float, epsilon: float) -> Tuple[
-        float, float, int]:
+    def bisection_optimization(func: Callable, lower_bound: float, upper_bound: float, delta: float = 0.1,
+                               tolerance: float = 1e-6) -> \
+            tuple[Union[float, Any], Any, int, str]:
         """
         The Bisection method is used to find the minimum of a function by evaluating the function at the midpoint and points slightly
         left and right of the midpoint, then narrowing the search interval based on these evaluations.
@@ -142,14 +144,16 @@ class IntervalOptimizationMethods:
         Tuple[float, float, int]: A tuple containing the x-value of the minimum (float), the minimum value of the function (float),
                                   and the number of iterations (int) it took to converge.
         """
+        lower_bound_init = lower_bound
+        upper_bound_init = upper_bound
         x = sp.symbols('x')
         f = sp.lambdify(x, func, modules='numpy')
         iterations = 0
-        while abs(lower_bound - upper_bound) > epsilon:
+        while abs(lower_bound - upper_bound) > tolerance:
             mid = (lower_bound + upper_bound) / 2
             left = mid - delta
             right = mid + delta
-            if f(left) < f(right):
+            if f(left) > f(right):
                 upper_bound = mid
             else:
                 lower_bound = mid
@@ -157,4 +161,9 @@ class IntervalOptimizationMethods:
 
         x_min = (lower_bound + upper_bound) / 2
         minimum = f(x_min)
-        return x_min, minimum, iterations
+        if np.isclose(x_min, lower_bound_init, atol=tolerance) or np.isclose(x_min, upper_bound_init, atol=tolerance):
+            result_status = "Failure"
+        else:
+            result_status = "Success"
+
+        return  minimum, x_min, iterations, result_status

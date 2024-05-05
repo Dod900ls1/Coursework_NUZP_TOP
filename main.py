@@ -51,7 +51,7 @@ if __name__ == '__main__':
                                                                                                                   lower_bound=-2,
                                                                                                                   upper_bound=2,
                                                                                                                   delta=0.1,
-                                                                                                                  epsilon=1e-6)
+                                                                                                                  tolerance=1e-6)
     print("Bisection Optimization Method:")
     print("Optimal value (x):", x_min_bisection)
     print("Best function value:", minimum_bisection)
