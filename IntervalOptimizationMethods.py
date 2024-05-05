@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Callable, Tuple
+from typing import Callable, Tuple, Union, Any
 import sympy as sp
 
 
@@ -12,7 +12,7 @@ class IntervalOptimizationMethods:
 
     @staticmethod
     def golden_ratio_optimization(func: Callable, a: float, b: float, tolerance: float = 1e-6) -> Tuple[
-        float, float, int]:
+        float, float, int, str]:
         """
         Implements the Golden Ratio Optimization method to find the minimum of a unimodal function within a specified interval.
 
@@ -23,15 +23,16 @@ class IntervalOptimizationMethods:
         - tolerance (float): The precision tolerance of the search (default is 1e-6).
 
         Returns:
-        Tuple[float, float, int]: A tuple containing the estimated x-value at the minimum (float), the minimum value of the function
-                                  at that x-value (float), and the number of iterations performed (int).
+        Tuple[float, float, int, str]: A tuple containing the estimated x-value at the minimum (float), the minimum value of the function
+                                       at that x-value (float), the number of iterations performed (int), and the result status ("Success" or "Failure").
         """
         x = sp.symbols("x")
         # Golden ratio constant
         golden_ratio = (np.sqrt(5) - 1) / 2
 
         f = sp.lambdify(x, func, 'numpy')
-
+        a_init = a
+        b_init = b
         # Initial points
         x1 = a + (1 - golden_ratio) * (b - a)
         x2 = a + golden_ratio * (b - a)
@@ -54,13 +55,20 @@ class IntervalOptimizationMethods:
                 x2 = a + golden_ratio * (b - a)
 
         # Return the midpoint of the final interval
-        x_optimal = (a + b) / 2
-        best_function_value = f(x_optimal)
-        return x_optimal, best_function_value, iterations
+        x_min = (a + b) / 2
+        best_function_value = f(x_min)
+
+        # Check if optimization is at a boundary
+        if np.isclose(x_min, a_init, atol=tolerance) or np.isclose(x_min, b_init, atol=tolerance):
+            result_status = "Failure"
+        else:
+            result_status = "Success"
+
+        return x_min, best_function_value, iterations, result_status
 
     @staticmethod
     def fibonacci_optimization(func: Callable, lower_bound: float, upper_bound: float, tolerance: float = 1e-6,
-                               n: int = 100) -> Tuple[float, float, int]:
+                               n: int = 100) -> tuple[Union[float, Any], Any, int, str]:
         """
         Utilizes Fibonacci numbers to determine the minimum of a function within an interval by progressively narrowing the range of search.
 
@@ -72,9 +80,12 @@ class IntervalOptimizationMethods:
         - n (int): The number of Fibonacci iterations to perform (default is 100).
 
         Returns:
-        Tuple[float, float, int]: A tuple containing the x-value where the function is minimized (float), the function's minimum value
-                                  at that x-value (float), and the number of iterations (int).
+        Tuple[float, float, int, str]: A tuple containing the estimated x-value at the minimum (float), the minimum value of the function
+                                       at that x-value (float), the number of iterations performed (int), and the result status ("Success" or "Failure").
         """
+        lower_bound_init = lower_bound
+        upper_bound_init = upper_bound
+
         fib = [0, 1]
         for i in range(2, n + 1):
             fib.append(fib[-1] + fib[-2])
@@ -87,7 +98,7 @@ class IntervalOptimizationMethods:
         f2 = f(x2)
 
         iterations = 0
-        while (upper_bound - lower_bound) > tolerance and iterations < n - 2:
+        while abs(upper_bound - lower_bound) > tolerance and iterations < n - 2:
             iterations += 1
             if f1 < f2:
                 upper_bound = x2
@@ -104,7 +115,14 @@ class IntervalOptimizationMethods:
 
         x_min = (x1 + x2) / 2
         minimum = f(x_min)
-        return x_min, minimum, iterations
+
+        # Check if optimization is at a boundary
+        if np.isclose(x_min, lower_bound_init, atol=tolerance) or np.isclose(x_min, upper_bound_init, atol=tolerance):
+            result_status = "Failure"
+        else:
+            result_status = "Success"
+
+        return x_min, minimum, iterations, result_status
 
     @staticmethod
     def bisection_optimization(func: Callable, a: float, b: float, delta: float, epsilon: float) -> Tuple[
