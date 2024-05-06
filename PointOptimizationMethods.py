@@ -41,13 +41,18 @@ class PointOptimizationMethods:
                         second_derivative_at_x) < 1e-8:
                     print("Invalid second derivative encountered.")
                     result_status = "Failure"
-                    break
+                    return None, None, None, result_status
+
+                if np.isinf(first_derivative_at_x) or np.isnan(first_derivative_at_x):
+                    print("Invalid first derivative encountered.")
+                    result_status = "Failure"
+                    return None, None, None, result_status
 
                 x_k1 = x_k - first_derivative_at_x / second_derivative_at_x
 
                 if np.isnan(x_k1):
                     result_status = "Failure"
-                    break
+                    return None, None, None, result_status
 
                 if abs(x_k1 - x_k) < precision:
                     x_k = x_k1
@@ -116,7 +121,7 @@ class PointOptimizationMethods:
     @staticmethod
     def random_search(fun_expr: sp.Expr, x_k: float, tolerance: float = 1e-6, step_size: float = 1,
                       max_iterations: int = 1000,
-                      shrink_step: bool = False) -> tuple:
+                      shrink_step: bool = True) -> tuple:
         """
         Random search method for optimizing a function starting from an initial guess.
 

@@ -97,7 +97,7 @@ for name, func in test_functions.items():
 
         start_time = time.time()
         x_opt, f_val, iterations = PointOptimizationMethods.random_search(func, point, point_precision, 1,
-                                                                          max_iterations, True)
+                                                                          max_iterations)
         elapsed_time = time.time() - start_time
         point_results[name][point]['Random'] = (x_opt, f_val, iterations, elapsed_time)
 
