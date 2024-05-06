@@ -2,8 +2,6 @@ import time
 import sympy as sp
 from PointOptimizationMethods import PointOptimizationMethods
 from IntervalOptimizationMethods import IntervalOptimizationMethods
-import matplotlib.pyplot as plt
-import numpy as np
 import csv
 
 # Define the test functions
@@ -152,46 +150,3 @@ def save_optimization_results():
 # Call function to save results to CSV
 save_optimization_results()
 
-# Plotting for interval optimization
-fig, ax = plt.subplots()
-index = np.arange(len(function_types))
-bar_width = 0.2
-opacity = 0.8
-
-# Create bars for each method for interval optimization
-for i, method in enumerate(['GoldenRatio', 'Fibonacci', 'Bisection']):
-    execution_times = [interval_average_times[ftype][method] for ftype in function_types]
-    ax.bar(index + i * bar_width, execution_times, bar_width, alpha=opacity, label=method)
-
-# Labeling and aesthetics for interval optimization
-ax.set_xlabel('Function Type')
-ax.set_ylabel('Average Execution Time (s)')
-ax.set_title('Average Optimization Execution Time (Interval Optimization)')
-ax.set_xticks(index + bar_width / 2 * (len(interval_average_times) - 1))
-ax.set_xticklabels(function_types.keys())
-ax.legend()
-
-fig.tight_layout()
-plt.show()
-
-# Plotting for point optimization
-fig, ax = plt.subplots()
-index = np.arange(len(function_types))
-bar_width = 0.25
-opacity = 0.8
-
-# Create bars for each method for point optimization
-for i, method in enumerate(['Newton', 'Gradient', 'Random']):
-    execution_times = [point_average_times[ftype][method] for ftype in function_types]
-    ax.bar(index + i * bar_width, execution_times, bar_width, alpha=opacity, label=method)
-
-# Labeling and aesthetics for point optimization
-ax.set_xlabel('Function Type')
-ax.set_ylabel('Average Execution Time (s)')
-ax.set_title('Average Optimization Execution Time (Point Optimization)')
-ax.set_xticks(index + bar_width / 2 * (len(point_average_times) - 1))
-ax.set_xticklabels(function_types.keys())
-ax.legend()
-
-fig.tight_layout()
-plt.show()
