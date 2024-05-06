@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Callable, Tuple, Union, Any
+from typing import Callable, Tuple, Union
 import sympy as sp
 
 
@@ -11,21 +11,22 @@ class IntervalOptimizationMethods:
     """
 
     @staticmethod
-    def golden_ratio_optimization(func: Callable, lower_bound: float, upper_bound: float, tolerance: float = 1e-6) -> \
-    Tuple[
-        float, float, int, str]:
+    def golden_ratio_optimization(func: Callable[[float], float], lower_bound: float, upper_bound: float,
+                                  tolerance: float = 1e-6) -> Tuple[float, float, int, str]:
         """
-        Implements the Golden Ratio Optimization method to find the minimum of a unimodal function within a specified interval.
+        Implements the Golden Ratio Optimization method to find the minimum of a unimodal function within a specified
+        interval.
 
         Parameters:
-        - func (Callable): The function to minimize.
-        - a (float): The lower boundary of the search interval.
-        - b (float): The upper boundary of the search interval.
-        - tolerance (float): The precision tolerance of the search (default is 1e-6).
+        - func (Callable[[float], float]): The function to minimize. It should take a float and return a float.
+        - lower_bound (float): The lower boundary of the search interval.
+        - upper_bound (float): The upper boundary of the search interval.
+        - tolerance (float): The precision tolerance of the search, defining how close the interval endpoints must be
+        to conclude the search.
 
         Returns:
-        Tuple[float, float, int, str]: A tuple containing the estimated x-value at the minimum (float), the minimum value of the function
-                                       at that x-value (float), the number of iterations performed (int), and the result status ("Success" or "Failure").
+        Tuple[float, float, int, str]: A tuple containing the estimated x-value at the minimum, the minimum value of the
+         function at that x-value, the number of iterations performed, and the result status ("Success" or "Failure").
         """
         x = sp.symbols("x")
         # Golden ratio constant
@@ -68,21 +69,25 @@ class IntervalOptimizationMethods:
         return x_min, best_function_value, iterations, result_status
 
     @staticmethod
-    def fibonacci_optimization(func: Callable, lower_bound: float, upper_bound: float, tolerance: float = 1e-6,
-                               n: int = 100) -> tuple[Union[float, Any], Any, int, str]:
-        """tolerance
-        Utilizes Fibonacci numbers to determine the minimum of a function within an interval by progressively narrowing the range of search.
+    def fibonacci_optimization(func: Callable[[float], float], lower_bound: float, upper_bound: float,
+                               tolerance: float = 1e-6, n: int = 100) -> Tuple[
+        Union[float, None], Union[float, None], int, str]:
+        """
+        Utilizes Fibonacci numbers to determine the minimum of a function within an interval by progressively narrowing
+         the range of search.
 
         Parameters:
-        - func (Callable): The function to minimize.
+        - func (Callable[[float], float]): The function to minimize.
         - lower_bound (float): The start of the interval.
         - upper_bound (float): The end of the interval.
-        - tolerance (float): The convergence tolerance.
-        - n (int): The number of Fibonacci iterations to perform (default is 100).
+        - tolerance (float): The convergence tolerance, defining the precision of the search.
+        - n (int): The number of Fibonacci iterations to perform. This defines the number of steps the interval is
+         reduced in.
 
         Returns:
-        Tuple[float, float, int, str]: A tuple containing the estimated x-value at the minimum (float), the minimum value of the function
-                                       at that x-value (float), the number of iterations performed (int), and the result status ("Success" or "Failure").
+        Tuple[Union[float, None], Union[float, None], int, str]: A tuple containing the estimated x-value at the
+         minimum, the minimum value of the function at that x-value, the number of iterations performed,
+         and the result status ("Success" or "Failure").
         """
         lower_bound_init = lower_bound
         upper_bound_init = upper_bound
@@ -126,23 +131,24 @@ class IntervalOptimizationMethods:
         return x_min, minimum, iterations, result_status
 
     @staticmethod
-    def bisection_optimization(func: Callable, lower_bound: float, upper_bound: float, delta: float = 0.1,
-                               tolerance: float = 1e-6) -> \
-            tuple[Union[float, Any], Any, int, str]:
+    def bisection_optimization(func: Callable[[float], float], lower_bound: float, upper_bound: float,
+                               delta: float = 0.1, tolerance: float = 1e-6) -> Tuple[float, float, int, str]:
         """
-        The Bisection method is used to find the minimum of a function by evaluating the function at the midpoint and points slightly
-        left and right of the midpoint, then narrowing the search interval based on these evaluations.
+        The Bisection method is used to find the minimum of a function by evaluating the function at the midpoint and
+        points slightly left and right of the midpoint, then narrowing the search interval based on these evaluations.
 
         Parameters:
-        - func (Callable): The function to minimize.
-        - a (float): The left endpoint of the interval.
-        - b (float): The right endpoint of the interval.
-        - delta (float): The distance from the midpoint where the function is evaluated.
-        - epsilon (float): The precision tolerance of the convergence.
+        - func (Callable[[float], float]): The function to minimize.
+        - lower_bound (float): The left endpoint of the interval.
+        - upper_bound (float): The right endpoint of the interval.
+        - delta (float): The distance from the midpoint where the function is evaluated, to determine the direction of
+        the interval reduction.
+        - tolerance (float): The precision tolerance of the convergence, defining how close the interval endpoints must
+        be to conclude the search.
 
         Returns:
-        Tuple[float, float, int]: A tuple containing the x-value of the minimum (float), the minimum value of the function (float),
-                                  and the number of iterations (int) it took to converge.
+        Tuple[float, float, int, str]: A tuple containing the x-value of the minimum, the minimum value of the function
+        at that x-value, the number of iterations, and the result status ("Success" or "Failure").
         """
         lower_bound_init = lower_bound
         upper_bound_init = upper_bound
@@ -166,4 +172,4 @@ class IntervalOptimizationMethods:
         else:
             result_status = "Success"
 
-        return  x_min, minimum, iterations, result_status
+        return x_min, minimum, iterations, result_status

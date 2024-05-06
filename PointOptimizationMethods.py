@@ -1,6 +1,7 @@
 import random
 import sympy as sp
 import numpy as np
+from typing import Tuple, Optional
 
 
 class PointOptimizationMethods:
@@ -9,19 +10,22 @@ class PointOptimizationMethods:
     """
 
     @staticmethod
-    def newtons_method(f: sp.Expr, x_k: float, tolerance: float = 1e-6, max_iterations: int = 100) -> tuple:
+    def newtons_method(f: sp.Expr, x_k: float, tolerance: float = 1e-6, max_iterations: int = 100) -> Tuple[
+        Optional[float], Optional[float], Optional[int], str]:
         """
-        Newton's method for finding a local minimum of a function.
+        Newton's method for finding a local minimum of a function using its derivatives.
 
-        Args:
-        - f (sp.Expr): The Sympy expression of the function to be minimized.
-        - x_k (float): Initial guess for the minimum point.
-        - precision (float): Precision for convergence.
-        - max_iterations (int): Maximum number of iterations to perform.
+        Parameters:
+        - f (sp.Expr): The function to be minimized, expressed as a SymPy expression.
+        - x_k (float): Initial guess for the location of the minimum.
+        - tolerance (float): The convergence criterion; the algorithm stops when the difference between successive
+        iterates is below this value.
+        - max_iterations (int): The maximum number of iterations to execute before stopping.
 
         Returns:
-        - tuple: (x_k, f(x_k), iterations) where x_k is the approximate minimum,
-                 f(x_k) is the function value at x_k, and iterations is the number of iterations performed.
+        Tuple[Optional[float], Optional[float], Optional[int], str]: Returns a tuple containing the approximate minimum
+        location, the function value at this location, the number of iterations performed, and the status of the
+         computation ("Success" or "Failure").
         """
         x = sp.symbols('x')
         f_prime = sp.diff(f, x)
@@ -67,25 +71,25 @@ class PointOptimizationMethods:
         f_lambdified = sp.lambdify(x, f, "numpy")
         return x_k, f_lambdified(x_k), iterations, result_status
 
-
     @staticmethod
     def gradient_method(fun: sp.Expr, uk: float, max_iterations: int = 1000, tolerance: float = 1e-6,
-                        alpha: float = 0.01, beta: float = 0.5, max_value: float = 1e20) -> tuple:
+                        alpha: float = 0.01, beta: float = 0.5, max_value: float = 1e20) -> Tuple[
+        Optional[float], Optional[float], int, str]:
         """
-        Gradient descent method for optimizing a function.
+        Gradient descent method for optimizing a function by iteratively moving against the gradient.
 
-        Args:
-        - fun (sp.Expr): The function to optimize, represented as a Sympy expression.
+        Parameters:
+        - fun (sp.Expr): The function to optimize, represented as a SymPy expression.
         - uk (float): Initial guess for the minimum value.
-        - max_iterations (int): Maximum allowed iterations.
-        - tolerance (float): Convergence tolerance.
-        - alpha (float): Coefficient for the line search.
+        - max_iterations (int): Maximum allowed number of iterations.
+        - tolerance (float): Convergence tolerance, the algorithm stops when the gradient's norm is less than this value.
+        - alpha (float): Coefficient for the line search to ensure sufficient decrease in function value.
         - beta (float): Reduction factor for step size during line search.
-        - max_value (float): Maximum allowed value for uk to prevent overflow.
+        - max_value (float): Maximum allowed value for the function argument to prevent overflow or extreme values.
 
         Returns:
-        - tuple: (uk, best_function_value, iterations) where uk is the optimized variable,
-                 best_function_value is the function value at uk, and iterations is the number of iterations used.
+        Tuple[Optional[float], Optional[float], int, str]: Returns the optimized variable value, the function value at
+        this optimized variable, the number of iterations used, and the status ("Success" or "Failure").
         """
         x = sp.symbols('x')
         f = fun
@@ -101,7 +105,7 @@ class PointOptimizationMethods:
             except ZeroDivisionError:
                 print("Division by zero. Stop iteration")
                 result_status = "Failure"
-                return None, None, None, result_status
+                return 0, 0, 0, result_status
             step_size = 1.0
 
             while fun(uk - step_size * grad_val) > fun(uk) - alpha * step_size * np.square(np.linalg.norm(grad_val)):
@@ -114,28 +118,29 @@ class PointOptimizationMethods:
 
             if abs(uk) > max_value:
                 result_status = "Failure"
-                return None, None, None, result_status
+                return 0, 0, 0, result_status
 
         return uk, fun(uk), i, result_status
 
     @staticmethod
     def random_search(fun_expr: sp.Expr, x_k: float, tolerance: float = 1e-6, step_size: float = 1,
-                      max_iterations: int = 1000,
-                      shrink_step: bool = True) -> tuple:
+                      max_iterations: int = 1000, shrink_step: bool = True) -> Tuple[float, float, int, str]:
         """
-        Random search method for optimizing a function starting from an initial guess.
+        Random search method for function optimization starting from an initial guess and exploring the function
+        space randomly.
 
-        Args:
-        - fun_expr (sp.Expr): Sympy expression of the function to optimize.
+        Parameters:
+        - fun_expr (sp.Expr): The function to optimize, given as a SymPy expression.
         - x_k (float): Initial guess for the optimal value.
-        - tolerance (float): Tolerance for convergence.
-        - step_size (float): Magnitude of the initial random steps.
-        - max_iterations (int): Maximum number of iterations.
-        - shrink_step (bool): Whether to decrease step size over iterations.
+        - tolerance (float): Tolerance for convergence; the search stops when the improvement between iterations is
+        smaller than this value.
+        - step_size (float): Initial step size for the random steps.
+        - max_iterations (int): Maximum number of iterations to perform.
+        - shrink_step (bool): Indicates whether to decrease the step size after each iteration to refine the search.
 
         Returns:
-        - tuple: (x_k, best_fun_val, iterations) where x_k is the optimized variable,
-                 best_fun_val is the function value at x_k, and iterations is the number of iterations performed.
+        Tuple[float, float, int, str]: Returns the optimized variable value, the best function value found, the number
+         of iterations performed, and the result status ("Success" or "Failure").
         """
         x = sp.symbols('x')
         fun_lambdified = sp.lambdify(x, fun_expr, 'numpy')
