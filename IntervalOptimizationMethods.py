@@ -70,7 +70,7 @@ class IntervalOptimizationMethods:
     @staticmethod
     def fibonacci_optimization(func: Callable, lower_bound: float, upper_bound: float, tolerance: float = 1e-6,
                                n: int = 100) -> tuple[Union[float, Any], Any, int, str]:
-        """
+        """tolerance
         Utilizes Fibonacci numbers to determine the minimum of a function within an interval by progressively narrowing the range of search.
 
         Parameters:

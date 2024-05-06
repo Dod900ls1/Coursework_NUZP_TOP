@@ -24,12 +24,12 @@ test_functions = {
     'Quartic 3': 0.5 * x ** 4 - x ** 3 - 3.5 * x ** 2 + 2 * x + 10,
     'Quartic 4': x ** 4 + 2 * x ** 3 - 13 * x ** 2 + 14 * x - 24,
     'Quartic 5': 3 * x ** 4 - 6 * x ** 3 + 3 * x ** 2 - 6 * x + 2,
-    'Exponential 1': sp.exp(x**2),
+    'Exponential 1': sp.exp(x ** 2),
     'Exponential 2': 2 ** x - x ** 2,
-    'Exponential 3': 2 ** x * 9*x**2,
-    'Logarithmic 1': sp.log(sp.exp(x**2) + x + 1),
+    'Exponential 3': 2 ** x * 9 * x ** 2,
+    'Logarithmic 1': sp.log(sp.exp(x ** 2) + x + 1),
     'Logarithmic 2': x * sp.log(x) - x ** 0.5,
-    'Logarithmic 3': x*sp.log(x) + x ** 2
+    'Logarithmic 3': x * sp.log(x) + x ** 2
 }
 
 function_types = {
@@ -39,7 +39,6 @@ function_types = {
     'Exponential': ['Exponential 1', 'Exponential 2', 'Exponential 3'],
     'Logarithmic': ['Logarithmic 1', 'Logarithmic 2', 'Logarithmic 3']
 }
-
 
 # Define initial intervals and parameters for interval optimization
 initial_intervals = [(-2, 2), (-4, 4), (-8, 8)]
@@ -64,19 +63,20 @@ for name, func in test_functions.items():
 
         start_time = time.time()
         x_opt, f_val, iterations, result1 = IntervalOptimizationMethods.golden_ratio_optimization(func, *interval,
-                                                                                         interval_precision)
+                                                                                                  interval_precision)
         elapsed_time = time.time() - start_time
         interval_results[name][interval]['GoldenRatio'] = (x_opt, f_val, iterations, result1, elapsed_time)
 
         start_time = time.time()
         x_opt, f_val, iterations, result2 = IntervalOptimizationMethods.fibonacci_optimization(func, *interval,
-                                                                                      interval_precision)
+                                                                                               interval_precision)
         elapsed_time = time.time() - start_time
         interval_results[name][interval]['Fibonacci'] = (x_opt, f_val, iterations, result2, elapsed_time)
 
         start_time = time.time()
-        x_opt, f_val, iterations, result3 = IntervalOptimizationMethods.bisection_optimization(func, *interval, delta=0.1,
-                                                                                      tolerance=interval_precision)
+        x_opt, f_val, iterations, result3 = IntervalOptimizationMethods.bisection_optimization(func, *interval,
+                                                                                               delta=0.1,
+                                                                                               tolerance=interval_precision)
         elapsed_time = time.time() - start_time
         interval_results[name][interval]['Bisection'] = (x_opt, f_val, iterations, result3, elapsed_time)
 
@@ -85,22 +85,22 @@ for name, func in test_functions.items():
         point_results[name][point] = {}
 
         start_time = time.time()
-        x_opt, f_val, iterations = PointOptimizationMethods.newtons_method(func, point, point_precision, max_iterations)
+        x_opt, f_val, iterations, result4 = PointOptimizationMethods.newtons_method(func, point, point_precision,
+                                                                                    max_iterations)
         elapsed_time = time.time() - start_time
-        point_results[name][point]['Newton'] = (x_opt, f_val, iterations, elapsed_time)
+        point_results[name][point]['Newton'] = (x_opt, f_val, iterations, result4, elapsed_time)
 
         start_time = time.time()
-        x_opt, f_val, iterations = PointOptimizationMethods.gradient_method(func, point, max_iterations,
-                                                                            point_precision)
+        x_opt, f_val, iterations, result5 = PointOptimizationMethods.gradient_method(func, point, max_iterations,
+                                                                                     point_precision)
         elapsed_time = time.time() - start_time
-        point_results[name][point]['Gradient'] = (x_opt, f_val, iterations, elapsed_time)
+        point_results[name][point]['Gradient'] = (x_opt, f_val, iterations, result5, elapsed_time)
 
         start_time = time.time()
-        x_opt, f_val, iterations = PointOptimizationMethods.random_search(func, point, point_precision, 1,
-                                                                          max_iterations)
+        x_opt, f_val, iterations, result6 = PointOptimizationMethods.random_search(func, point, point_precision, 1,
+                                                                                   max_iterations)
         elapsed_time = time.time() - start_time
-        point_results[name][point]['Random'] = (x_opt, f_val, iterations, elapsed_time)
-
+        point_results[name][point]['Random'] = (x_opt, f_val, iterations, result6, elapsed_time)
 
 # Initialize dictionary to store average times for interval optimization
 interval_average_times = {ftype: {'GoldenRatio': 0, 'Fibonacci': 0, 'Bisection': 0} for ftype in function_types}
@@ -122,7 +122,7 @@ for ftype, fnames in function_types.items():
     for fname in fnames:
         for point in point_results[fname]:
             for method in point_results[fname][point]:
-                point_average_times[ftype][method] += point_results[fname][point][method][3] / num_points
+                point_average_times[ftype][method] += point_results[fname][point][method][4] / num_points
 
 
 def save_optimization_results():
@@ -130,7 +130,7 @@ def save_optimization_results():
         writer = csv.writer(file)
         writer.writerow(
             ['Optimization Type', 'Function Name', 'Parameter', 'Method', 'Optimal x', 'Function Value', 'Iterations',
-             'Result','Time'])
+             'Result', 'Time'])
 
         # Write interval optimization results
         for func_name, intervals in interval_results.items():
@@ -145,7 +145,8 @@ def save_optimization_results():
             for point, methods in points.items():
                 for method, result in methods.items():
                     writer.writerow(
-                        ['Point', func_name, f"Point {point}", method, result[0], result[1], result[2], result[3]])
+                        ['Point', func_name, f"Point {point}", method, result[0], result[1], result[2],
+                         result[3], result[4]])
 
 
 # Call function to save results to CSV

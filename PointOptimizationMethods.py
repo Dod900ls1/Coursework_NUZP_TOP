@@ -9,7 +9,7 @@ class PointOptimizationMethods:
     """
 
     @staticmethod
-    def newtons_method(f: sp.Expr, x_k: float, precision: float = 1e-6, max_iterations: int = 100) -> tuple:
+    def newtons_method(f: sp.Expr, x_k: float, tolerance: float = 1e-6, max_iterations: int = 100) -> tuple:
         """
         Newton's method for finding a local minimum of a function.
 
@@ -54,7 +54,7 @@ class PointOptimizationMethods:
                     result_status = "Failure"
                     return None, None, None, result_status
 
-                if abs(x_k1 - x_k) < precision:
+                if abs(x_k1 - x_k) < tolerance:
                     x_k = x_k1
                     break
 
@@ -165,5 +165,6 @@ class PointOptimizationMethods:
                 break
 
             previous_fun_val = fun_val
-
-        return best_x, best_fun_val, iterations
+        if iterations == max_iterations:
+            return best_x, best_fun_val, iterations, "Failure"
+        return best_x, best_fun_val, iterations, "Success"
