@@ -1,39 +1,26 @@
-"""
-Here I would do stats
-"""
+import pandas as pd
 from scipy.stats import f_oneway
-from scipy.stats import tukey_hsd
+from scipy.stats import shapiro
+from scipy.stats import levene
 
 
-"""
-What means do we compare with ANOVA?
+# Load data from CSV file
+df = pd.read_csv("ANOVA_results.csv")
 
-We want to create a mean execution time for what? 
+# Extract unique method names
+unique_methods = df["Method"].unique()
 
-For different optimization methods. But I wonder if there is a problem with just doing anova on average execution time
-in general. What I might do instead, is to separate dataset into polynomials, exponential and logarithmic functions.
-And test the average execution time of those 3.
+# Initialize a list to store data for each method
+data = []
 
-After a while, I realized that it is noncense, and I would just compare their means.
+# Iterate over unique method names
+for method in unique_methods:
+    method_data = df[df["Method"] == method]["Time"]
+    data.append(method_data)
 
-6 optimization methods - do anova. Then do turkish HDS.
+# Perform one-way ANOVA
+f_statistic, p_value = f_oneway(*data)
 
-But first we need to check assumptions what needed
-"""
-
-
-print(f_oneway([1,2,3,4,5], [1,2,3,4,5]))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# Display ANOVA results
+print("ANOVA F-statistic:", f_statistic)
+print("ANOVA p-value:", p_value)
