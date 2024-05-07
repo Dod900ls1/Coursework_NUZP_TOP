@@ -3,6 +3,7 @@ import sympy as sp
 from PointOptimizationMethods import PointOptimizationMethods
 from IntervalOptimizationMethods import IntervalOptimizationMethods
 import csv
+import pandas as pd
 
 # Define the test functions
 x = sp.symbols('x')
@@ -150,3 +151,27 @@ def save_optimization_results():
 # Call function to save results to CSV
 save_optimization_results()
 
+
+
+# Function types
+function_types = ['Quadratic', 'Cubic', 'Quartic', 'Exponential', 'Logarithmic']
+
+# Read data from CSV file
+data = pd.read_csv('optimization_results.csv')
+
+# Dictionary to store average results by function
+avg_results_by_function = {}
+dfs = []
+
+# Iterate over each method
+for method_name, method_data in data.groupby('Method'):
+    avg_results_by_function[method_name] = {}
+    # Iterate over each function type
+    for function_type in function_types:
+        # Filter data for the current function type
+        function_data = method_data[method_data['Function Name'].str.startswith(function_type)]
+        dfs.append(function_data[['Optimization Type', 'Method', 'Time']])
+        # Store the average time in the dictionary
+        avg_results_by_function[method_name][function_type] = function_data['Time'].mean()
+result_df = pd.concat(dfs, ignore_index=True)
+result_df.to_csv("ANOVA_results.csv", index=False)

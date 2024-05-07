@@ -16,7 +16,9 @@ And test the average execution time of those 3.
 
 After a while, I realized that it is noncense, and I would just compare their means.
 
-6 optimization methods - do anova. Then do turkish HDS
+6 optimization methods - do anova. Then do turkish HDS.
+
+But first we need to check assumptions what needed
 """
 
 
