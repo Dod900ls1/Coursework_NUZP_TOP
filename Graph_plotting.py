@@ -10,12 +10,6 @@ data = pd.read_csv('optimization_results.csv')
 # Dictionary to store average results by function
 avg_results_by_function = {}
 
-# Function to calculate average time
-def calculate_average_time(results):
-    success_results = results[results['Result'] == 'Success']
-    if len(success_results) == 0:
-        return 0
-    return success_results['Time'].mean()
 
 # Iterate over each method
 for method_name, method_data in data.groupby('Method'):
@@ -24,10 +18,8 @@ for method_name, method_data in data.groupby('Method'):
     for function_type in function_types:
         # Filter data for the current function type
         function_data = method_data[method_data['Function Name'].str.startswith(function_type)]
-        # Calculate average time for the current function type
-        avg_time = calculate_average_time(function_data)
         # Store the average time in the dictionary
-        avg_results_by_function[method_name][function_type] = avg_time
+        avg_results_by_function[method_name][function_type] = function_data['Time'].mean()
 
 # Convert dictionary to DataFrame
 df = pd.DataFrame(avg_results_by_function)
@@ -45,7 +37,6 @@ plt.ylabel('Average Time')
 plt.xticks(rotation=45)
 plt.legend(title='Method')
 plt.tight_layout()
-plt.savefig('methods_bisection_fibonacci_goldenratio.png')  # Save the plot as an image
 plt.show()
 
 # Plotting the bar chart for the rest of the methods
@@ -57,5 +48,4 @@ plt.ylabel('Average Time')
 plt.xticks(rotation=45)
 plt.legend(title='Method')
 plt.tight_layout()
-plt.savefig('methods_other.png')  # Save the plot as an image
 plt.show()
