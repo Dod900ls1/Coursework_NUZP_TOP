@@ -164,7 +164,7 @@ avg_results_by_function = {}
 dfs = []
 
 # Iterate over each method
-for method_name, method_data in data.groupby('Method'):
+for method_name, method_data in data[data['Result'] == 'Success'].groupby('Method'):
     avg_results_by_function[method_name] = {}
     # Iterate over each function type
     for function_type in function_types:
