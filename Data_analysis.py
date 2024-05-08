@@ -83,6 +83,7 @@ for i, group_data in enumerate(groups):
     plt.hist(group_data, bins=20, alpha=0.7)
     plt.title(unique_methods[i])
 plt.tight_layout()
+plt.savefig('6.png')
 plt.show()
 
 # Boxplot for visualizing variances
