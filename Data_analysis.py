@@ -47,13 +47,15 @@ def create_bootstrap_dataframe(data, unique_methods):
     return bootstrap_means_df
 
 def plot_histograms(groups, unique_methods):
-    plt.figure(figsize=(12, 6))
-    for i, group_data in enumerate(groups):
-        plt.subplot(1, len(groups), i + 1)
-        plt.hist(group_data, bins=20, alpha=0.7)
-        plt.title(unique_methods[i])
-    plt.tight_layout()
-    plt.savefig('histograms.png')
+    fig, axes = plt.subplots(1, len(groups), figsize=(14, 6), sharey=True)
+    fig.suptitle("Bootstrap Histograms", fontsize=16)
+
+    for ax, group_data, method_name in zip(axes, groups, unique_methods):
+        ax.hist(group_data, bins=20, alpha=0.7)
+        ax.set_title(method_name)
+
+    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+    plt.savefig('6.png')
     plt.show()
 
 def plot_boxplots(groups, unique_methods):

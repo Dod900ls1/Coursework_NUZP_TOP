@@ -29,18 +29,20 @@ This file contains classes and methods for point-based optimization techniques.
   - Method: `random_search(fun_expr, x_k, tolerance, step_size, max_iterations, shrink_step)`
   - Description: Utilizes random search technique to optimize a function by randomly exploring the solution space.
 
-## main.py
+## Graph_plotting.py
+This file includes functions for reading and processing data from a CSV file, computing average times, and plotting bar charts, histograms, and boxplots.
 
-This file serves as the main entry point for running optimization methods on provided test functions.
+## multi_optimization.py
+This script performs optimization using both point and interval methods, saving the results to a CSV file. It also aggregates and saves the results in another CSV file.
 
-- **Usage**: The main function executes various optimization methods on predefined test functions and prints the results.
 
-## test.py
+## Data_analysis.py
+This file contains functions for loading and preprocessing data, performing statistical tests, bootstrapping, and plotting histograms and boxplots.
 
-This file contains test functions used to evaluate the performance of optimization methods.
 
-- **Test Functions**: Defines a set of quadratic, cubic, and quartic functions to be used for testing the optimization methods.
-- **Method Evaluation**: Iterates through the test functions and optimization methods, recording the optimal solutions, function values, iterations, and execution times.
+### test.py
+This script tests the optimization methods defined in the `PointOptimizationMethods` class.
+
 </details>
 
 <details>
@@ -48,11 +50,11 @@ This file contains test functions used to evaluate the performance of optimizati
 
 ## IntervalOptimizationMethods.py
 
-У цьому файлі містяться класи та методи для методів оптимізації інтервалу.
+Цей файл містить класи та методи для методів оптимізації інтервалу.
 
-- **Оптимізація золотого перетину**
+- **Оптимізація золотим відношенням**
   - Метод: `golden_ratio_optimization(func, a, b, tolerance)`
-  - Опис: Реалізує метод оптимізації золотого перетину для пошуку мінімуму унімодальної функції в заданому інтервалі.
+  - Опис: Реалізує метод оптимізації золотим відношенням для знаходження мінімуму унімодальної функції в заданому інтервалі.
 - **Оптимізація числами Фібоначчі**
   - Метод: `fibonacci_optimization(func, lower_bound, upper_bound, tolerance, n)`
   - Опис: Використовує метод пошуку числами Фібоначчі для поступового скорочення інтервалу пошуку функції.
@@ -62,7 +64,7 @@ This file contains test functions used to evaluate the performance of optimizati
 
 ## PointOptimizationMethods.py
 
-У цьому файлі містяться класи та методи для точкових методів оптимізації.
+Цей файл містить класи та методи для точкових методів оптимізації.
 
 - **Метод Ньютона**
   - Метод: `newtons_method(f, x_k, precision, max_iterations)`
@@ -74,17 +76,18 @@ This file contains test functions used to evaluate the performance of optimizati
   - Метод: `random_search(fun_expr, x_k, tolerance, step_size, max_iterations, shrink_step)`
   - Опис: Використовує випадковий пошук для оптимізації функції шляхом випадкового дослідження простору рішень.
 
-## main.py
+## Graph_plotting.py
+Цей файл включає функції для читання та обробки даних з файлу CSV, обчислення середніх часів та побудови стовпчикових діаграм, гістограм та бокс-плотів.
 
-Цей файл служить основним точкою входу для запуску методів оптимізації на заданих тестових функціях.
+## multi_optimization.py
+Цей скрипт виконує оптимізацію за допомогою як точкових, так і інтервальних методів, зберігаючи результати у файлі CSV. Також результати агрегуються та зберігаються у іншому файлі CSV.
 
-- **Використання**: Головна функція виконує різні методи оптимізації на заданих тестових функціях та виводить результати.
 
-## test.py
+## Data_analysis.py
+Цей файл містить функції для завантаження та передобробки даних, виконання статистичних тестів, бутстрепу та побудови гістограм та бокс-плотів.
 
-У цьому файлі містяться тестові функції, які використовуються для оцінки продуктивності методів оптимізації.
 
-- **Тестові функції**: Визначає набір квадратних, кубічних та квартичних функцій для тестування методів оптимізації.
-- **Оцінка методів**: Ітерується через тестові функції та методи оптимізації, записуючи оптимальні рішення, значення функцій, ітерації та час виконання.
+### test.py
+У цьому скрипті проводяться тести методів оптимізації, визначених у класі `PointOptimizationMethods`.
 
 </details>
