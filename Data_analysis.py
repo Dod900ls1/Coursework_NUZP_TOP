@@ -90,6 +90,7 @@ plt.figure(figsize=(10, 6))
 plt.boxplot(groups, labels=unique_methods)
 plt.title('Comparison of Bootstrapped Means Across Methods')
 plt.ylabel('Bootstrapped Mean')
+plt.savefig('1.png')
 plt.show()
 # Performing ANOVA
 # anova_result = stats.f_oneway(*groups)

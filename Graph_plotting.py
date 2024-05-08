@@ -37,6 +37,7 @@ plt.ylabel('Average Time')
 plt.xticks(rotation=45)
 plt.legend(title='Method')
 plt.tight_layout()
+plt.savefig("5.png")
 plt.show()
 
 # Plotting the bar chart for the rest of the methods
@@ -48,6 +49,7 @@ plt.ylabel('Average Time')
 plt.xticks(rotation=45)
 plt.legend(title='Method')
 plt.tight_layout()
+plt.savefig("4.png")
 plt.show()
 
 
@@ -73,6 +75,7 @@ for i, method_data in enumerate(data, 1):
     plt.xlabel("Time")
     plt.ylabel("Frequency")
 plt.tight_layout()
+plt.savefig("3.png")
 plt.show()
 
 # Plot boxplots for homogeneity
@@ -81,4 +84,5 @@ plt.boxplot(data, labels=unique_methods)
 plt.title("Boxplot of Execution Times by Method")
 plt.xlabel("Method")
 plt.ylabel("Time")
+plt.savefig("2.png")
 plt.show()
