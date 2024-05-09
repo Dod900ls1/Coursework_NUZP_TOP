@@ -120,6 +120,10 @@ class PointOptimizationMethods:
                 result_status = "Failure"
                 return 0, 0, 0, result_status
 
+            if i == max_iterations:
+                result_status = "Failure"
+                return 0, 0, 0, result_status
+
         return uk, fun(uk), i, result_status
 
     @staticmethod

@@ -28,7 +28,7 @@ def plot_results(avg_results_by_function, function_types, title_prefix, file_pre
         plt.xticks(rotation=45)
         plt.legend(title='Method')
         plt.tight_layout()
-        plt.savefig(f"{file_prefix}_{precision}.png")
+        plt.savefig(f"images/{file_prefix}_{precision}.png")
         plt.show()
 
     # Combine all precision results
