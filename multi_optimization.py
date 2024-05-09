@@ -44,22 +44,27 @@ def define_function_types():
     }
 
 
-def perform_optimizations(test_functions, initial_intervals, initial_points, interval_precision, point_precision,
-                          max_iterations):
+def perform_optimizations(test_functions, initial_intervals, initial_points, precisions, max_iterations):
     interval_results, point_results = {}, {}
-    for name, func in test_functions.items():
-        interval_results[name], point_results[name] = {}, {}
-        run_interval_optimizations(func, interval_results[name], initial_intervals, interval_precision)
-        run_point_optimizations(func, point_results[name], initial_points, point_precision, max_iterations)
+    for precision in precisions:
+        for name, func in test_functions.items():
+            interval_results.setdefault(name, {})
+            point_results.setdefault(name, {})
+            run_interval_optimizations(func, interval_results[name], initial_intervals, precision)
+            run_point_optimizations(func, point_results[name], initial_points, precision, max_iterations)
     return interval_results, point_results
 
 
 def run_interval_optimizations(func, results_dict, intervals, precision):
     for interval in intervals:
         results_dict[interval] = {}
-        results_dict[interval]['GoldenRatio'] = run_optimization(func, IntervalOptimizationMethods.golden_ratio_optimization, *interval, tolerance=precision)
-        results_dict[interval]['Fibonacci'] = run_optimization(func, IntervalOptimizationMethods.fibonacci_optimization, *interval, tolerance=precision)
-        results_dict[interval]['Bisection'] = run_optimization(func, IntervalOptimizationMethods.bisection_optimization, *interval, delta=0.1, tolerance=precision)
+        results_dict[interval]['GoldenRatio'] = run_optimization(func,
+                                                                 IntervalOptimizationMethods.golden_ratio_optimization,
+                                                                 *interval, tolerance=precision)
+        results_dict[interval]['Fibonacci'] = run_optimization(func, IntervalOptimizationMethods.fibonacci_optimization,
+                                                               *interval, tolerance=precision)
+        results_dict[interval]['Bisection'] = run_optimization(func, IntervalOptimizationMethods.bisection_optimization,
+                                                               *interval, delta=0.1, tolerance=precision)
 
 
 def run_point_optimizations(func, results_dict, points, tolerance, max_iterations):
@@ -79,36 +84,49 @@ def run_optimization(func, method, *args, **kwargs):
     elapsed_time = time.time() - start_time
     return result + (elapsed_time,)
 
-def save_optimization_results(interval_results, point_results, filename='optimization_results.csv'):
+
+def save_optimization_results(all_interval_results, all_point_results, filename='optimization_results.csv'):
     with open(filename, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(
             ['Optimization Type', 'Function Name', 'Parameter', 'Method', 'Optimal x', 'Function Value', 'Iterations',
-             'Result', 'Time'])
-        write_results(writer, 'Interval', interval_results)
-        write_results(writer, 'Point', point_results)
+             'Result', 'Time', 'Precision'])
+        for precision, interval_results in all_interval_results.items():
+            for func_name, results_by_name in interval_results.items():
+                for param, methods in results_by_name.items():
+                    for method, results in methods.items():
+                        writer.writerow(['Interval', func_name, param, method] + list(results) + [precision])
+        for precision, point_results in all_point_results.items():
+            for func_name, results_by_name in point_results.items():
+                for param, methods in results_by_name.items():
+                    for method, results in methods.items():
+                        writer.writerow(['Point', func_name, param, method] + list(results) + [precision])
 
 
-def write_results(writer, optimization_type, results):
+def write_results(writer, optimization_type, results, precision):
     for func_name, params in results.items():
         for param, methods in params.items():
             for method, result in methods.items():
-                writer.writerow([optimization_type, func_name, f"{optimization_type} {param}", method] + list(result))
+                writer.writerow(
+                    [optimization_type, func_name, f"{optimization_type} {param}", method] + list(result) + [precision])
 
 
 def main():
     test_functions = define_functions()
-    function_types = define_function_types()
     initial_intervals = [(-2, 2), (-4, 4), (-8, 8)]
     initial_points = [0, 1, 2]
-    interval_precision = point_precision = 1e-6
+    precisions = [1e-2, 1e-4, 1e-6, 1e-8, 1e-10]  # List of precisions
     max_iterations = 1000
 
-    interval_results, point_results = perform_optimizations(test_functions, initial_intervals, initial_points,
-                                                            interval_precision, point_precision, max_iterations)
-    save_optimization_results(interval_results, point_results)
+    all_interval_results = {}
+    all_point_results = {}
+    for precision in precisions:
+        interval_results, point_results = perform_optimizations(test_functions, initial_intervals, initial_points,
+                                                                [precision], max_iterations)
+        all_interval_results[precision] = interval_results
+        all_point_results[precision] = point_results
 
-    aggregate_and_save_results('optimization_results.csv', 'ANOVA_results.csv', function_types)
+    save_optimization_results(all_interval_results, all_point_results, 'optimization_results2.csv')
 
 
 def aggregate_and_save_results(input_filename, output_filename, function_types):
