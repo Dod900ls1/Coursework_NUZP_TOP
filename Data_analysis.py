@@ -3,6 +3,7 @@ import numpy as np
 import scipy.stats as stats
 import matplotlib.pyplot as plt
 
+
 def load_data(filename):
     try:
         df = pd.read_csv(filename)
@@ -10,6 +11,7 @@ def load_data(filename):
     except FileNotFoundError:
         print("File not found. Please check the filename or path.")
         return None
+
 
 def preprocess_data(df):
     unique_methods = df["Method"].unique()
@@ -19,16 +21,21 @@ def preprocess_data(df):
         data.append(method_data)
     return unique_methods, data
 
+
 def perform_shapiro_tests(data, unique_methods):
     for i, method_data in enumerate(data, 1):
         stat, p_value = stats.shapiro(method_data)
-        print(f"Shapiro-Wilk test for method {unique_methods[i-1]}: Statistic: {stat}, p-value: {p_value}")
-        print("Data is normally distributed (fail to reject H0)\n" if p_value > 0.05 else "Data is not normally distributed (reject H0)\n")
+        print(f"Shapiro-Wilk test for method {unique_methods[i - 1]}: Statistic: {stat}, p-value: {p_value}")
+        print(
+            "Data is normally distributed (fail to reject H0)\n" if p_value > 0.05 else "Data is not normally distributed (reject H0)\n")
+
 
 def check_variances_homogeneity(data):
     stat, p_value = stats.bartlett(*data)
     print(f"Bartlett's test for homogeneity of variances: Statistic: {stat}, p-value: {p_value}")
-    print("Variances are homogeneous (fail to reject H0)" if p_value > 0.05 else "Variances are not homogeneous (reject H0)")
+    print(
+        "Variances are homogeneous (fail to reject H0)" if p_value > 0.05 else "Variances are not homogeneous (reject H0)")
+
 
 def bootstrap(data, Nboot, statfun):
     resampled_stat = []
@@ -38,6 +45,7 @@ def bootstrap(data, Nboot, statfun):
         resampled_stat.append(statfun(sample))
     return np.array(resampled_stat)
 
+
 def create_bootstrap_dataframe(data, unique_methods):
     bootstrap_means_list = [bootstrap(method_data, 400, np.mean) for method_data in data]
     bootstrap_means_df = pd.DataFrame()
@@ -45,6 +53,7 @@ def create_bootstrap_dataframe(data, unique_methods):
         method_df = pd.DataFrame({"Bootstrapped_Mean": bootstrap_means, "Method": method})
         bootstrap_means_df = pd.concat([bootstrap_means_df, method_df], ignore_index=True)
     return bootstrap_means_df
+
 
 def plot_histograms(groups, unique_methods):
     fig, axes = plt.subplots(1, len(groups), figsize=(14, 6), sharey=True)
@@ -55,16 +64,18 @@ def plot_histograms(groups, unique_methods):
         ax.set_title(method_name)
 
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
-    plt.savefig('6.png')
+    plt.savefig('images/6.png')
     plt.show()
+
 
 def plot_boxplots(groups, unique_methods):
     plt.figure(figsize=(10, 6))
     plt.boxplot(groups, labels=unique_methods)
     plt.title('Comparison of Bootstrapped Means Across Methods')
     plt.ylabel('Bootstrapped Mean')
-    plt.savefig('boxplots.png')
+    plt.savefig('images/boxplots.png')
     plt.show()
+
 
 def main():
     df = load_data("ANOVA_results.csv")
@@ -73,9 +84,11 @@ def main():
         perform_shapiro_tests(data, unique_methods)
         check_variances_homogeneity(data)
         bootstrap_means_df = create_bootstrap_dataframe(data, unique_methods)
-        groups = [bootstrap_means_df[bootstrap_means_df['Method'] == method]['Bootstrapped_Mean'].values for method in unique_methods]
+        groups = [bootstrap_means_df[bootstrap_means_df['Method'] == method]['Bootstrapped_Mean'].values for method in
+                  unique_methods]
         plot_histograms(groups, unique_methods)
         plot_boxplots(groups, unique_methods)
+
 
 if __name__ == "__main__":
     main()
