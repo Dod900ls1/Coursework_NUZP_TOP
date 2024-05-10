@@ -3,7 +3,6 @@ import sympy as sp
 from PointOptimizationMethods import PointOptimizationMethods
 from IntervalOptimizationMethods import IntervalOptimizationMethods
 import csv
-import pandas as pd
 
 
 # Define the test functions
@@ -127,19 +126,6 @@ def main():
         all_point_results[precision] = point_results
 
     save_optimization_results(all_interval_results, all_point_results, 'optimization_results2.csv')
-
-
-def aggregate_and_save_results(input_filename, output_filename, function_types):
-    data = pd.read_csv(input_filename)
-    avg_results_by_function, dfs = {}, []
-    for method_name, method_data in data[data['Result'] == 'Success'].groupby('Method'):
-        avg_results_by_function[method_name] = {}
-        for function_type in function_types:
-            function_data = method_data[method_data['Function Name'].str.startswith(function_type)]
-            dfs.append(function_data[['Optimization Type', 'Method', 'Time']])
-            avg_results_by_function[method_name][function_type] = function_data['Time'].mean()
-    result_df = pd.concat(dfs, ignore_index=True)
-    result_df.to_csv(output_filename, index=False)
 
 
 if __name__ == "__main__":
