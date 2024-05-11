@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import scipy.stats as stats
-import matplotlib.pyplot as plt
+import statsmodels.stats.multicomp as multi
 
 
 def load_data(filename):
@@ -34,60 +34,48 @@ def check_variances_homogeneity(data):
     stat, p_value = stats.bartlett(*data)
     print(f"Bartlett's test for homogeneity of variances: Statistic: {stat}, p-value: {p_value}")
     print(
-        "Variances are homogeneous (fail to reject H0)" if p_value > 0.05 else "Variances are not homogeneous (reject H0)")
+        "Variances are homogeneous (fail to reject H0)" if p_value > 0.05 else "Variances are not homogeneous (reject H0)\n")
 
 
-def bootstrap(data, Nboot, statfun):
-    resampled_stat = []
-    for k in range(Nboot):
-        index = np.random.randint(0, len(data), len(data))
-        sample = data.iloc[index]
-        resampled_stat.append(statfun(sample))
-    return np.array(resampled_stat)
+def perform_kruskal_wallis_test(df):
+    groups = [group['Time'].values for name, group in df.groupby('Method')]
+    kruskal_result = stats.kruskal(*groups)
+    print(f"Kruskal-Wallis Test: H-statistic = {kruskal_result.statistic}, p-value = {kruskal_result.pvalue}")
+    return kruskal_result.pvalue
 
 
-def create_bootstrap_dataframe(data, unique_methods):
-    bootstrap_means_list = [bootstrap(method_data, 400, np.mean) for method_data in data]
-    bootstrap_means_df = pd.DataFrame()
-    for method, bootstrap_means in zip(unique_methods, bootstrap_means_list):
-        method_df = pd.DataFrame({"Bootstrapped_Mean": bootstrap_means, "Method": method})
-        bootstrap_means_df = pd.concat([bootstrap_means_df, method_df], ignore_index=True)
-    return bootstrap_means_df
+
+def perform_games_howell_test(df):
+    comp = multi.MultiComparison(df['Time'], df['Method'])
+    result = comp.tukeyhsd()
+    summary = pd.DataFrame(data=result._results_table.data[1:], columns=result._results_table.data[0])
+    print("Games-Howell Post-Hoc Test Results:")
+    return summary
 
 
-def plot_histograms(groups, unique_methods):
-    fig, axes = plt.subplots(1, len(groups), figsize=(14, 6), sharey=True)
-    fig.suptitle("Bootstrap Histograms", fontsize=16)
+def games_howell_posthoc(data_dict):
+    data = []
+    labels = []
+    for k, v in data_dict.items():
+        data.extend(v)
+        labels.extend([k] * len(v))
 
-    for ax, group_data, method_name in zip(axes, groups, unique_methods):
-        ax.hist(group_data, bins=20, alpha=0.7)
-        ax.set_title(method_name)
+    comp = multi.MultiComparison(data, labels)
+    posthoc_results = comp.tukeyhsd(alpha=0.05)
 
-    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
-    plt.savefig('images/6.png')
-    plt.show()
-
-
-def plot_boxplots(groups, unique_methods):
-    plt.figure(figsize=(10, 6))
-    plt.boxplot(groups, labels=unique_methods)
-    plt.title('Comparison of Bootstrapped Means Across Methods')
-    plt.ylabel('Bootstrapped Mean')
-    plt.savefig('images/boxplots.png')
-    plt.show()
+    print("Games-Howell Post-Hoc Test Results:")
+    return posthoc_results.summary()
 
 
 def main():
-    df = load_data("ANOVA_results.csv")
+    filename = 'optimization_results2.csv'
+    df = load_data(filename)
     if df is not None:
         unique_methods, data = preprocess_data(df)
         perform_shapiro_tests(data, unique_methods)
         check_variances_homogeneity(data)
-        bootstrap_means_df = create_bootstrap_dataframe(data, unique_methods)
-        groups = [bootstrap_means_df[bootstrap_means_df['Method'] == method]['Bootstrapped_Mean'].values for method in
-                  unique_methods]
-        plot_histograms(groups, unique_methods)
-        plot_boxplots(groups, unique_methods)
+        if perform_kruskal_wallis_test(df) < 0.05:
+            print(perform_games_howell_test(df))
 
 
 if __name__ == "__main__":
