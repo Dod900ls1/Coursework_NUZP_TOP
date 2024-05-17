@@ -7,7 +7,7 @@ libraries = [
     "pandas",
     "numpy",
     "scipy",
-    "sympy"  # Fixed the typo: 'symoy' to 'sympy'
+    "sympy"
 ]
 
 # Function to install a package using pip
