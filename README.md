@@ -35,13 +35,24 @@ This file includes functions for reading and processing data from a CSV file, co
 ## multi_optimization.py
 This script performs optimization using both point and interval methods, saving the results to a CSV file. It also aggregates and saves the results in another CSV file.
 
-
 ## Data_analysis.py
 This file contains functions for loading and preprocessing data, performing statistical tests, bootstrapping, and plotting histograms and boxplots.
 
-
-### test.py
+## test.py
 This script tests the optimization methods defined in the `PointOptimizationMethods` class.
+
+### CSV Column Descriptions
+
+- **Optimization Type**: Specifies the type of optimization method used, such as interval-based or point-based methods.
+- **Function Name**: The name of the mathematical function being optimized.
+- **Parameter**: The initial parameter range or starting point for the optimization method.
+- **Method**: The specific optimization algorithm applied, such as Golden Ratio, Fibonacci, or Bisection.
+- **Optimal x**: The value of the variable \( x \) that results in the minimum function value found by the optimization method.
+- **Function Value**: The value of the function at the optimal \( x \).
+- **Iterations**: The number of iterations the optimization algorithm took to reach the result.
+- **Result**: Indicates whether the optimization was a "Success" or "Failure" based on the defined criteria.
+- **Time**: The time taken by the optimization algorithm to complete, measured in seconds.
+- **Precision**: The desired precision level for the optimization result, typically a small positive number.
 
 </details>
 
@@ -82,12 +93,22 @@ This script tests the optimization methods defined in the `PointOptimizationMeth
 ## multi_optimization.py
 Цей скрипт виконує оптимізацію за допомогою як точкових, так і інтервальних методів, зберігаючи результати у файлі CSV. Також результати агрегуються та зберігаються у іншому файлі CSV.
 
-
 ## Data_analysis.py
 Цей файл містить функції для завантаження та передобробки даних, виконання статистичних тестів, бутстрепу та побудови гістограм та бокс-плотів.
 
-
-### test.py
+## test.py
 У цьому скрипті проводяться тести методів оптимізації, визначених у класі `PointOptimizationMethods`.
 
+### Опис Стовпців CSV
+
+- **Тип Оптимізації**: Вказує тип використаного методу оптимізації, наприклад, методи на основі інтервалів або точкові методи.
+- **Назва Функції**: Назва математичної функції, що оптимізується.
+- **Параметр**: Початковий діапазон параметрів або початкова точка для методу оптимізації.
+- **Метод**: Конкретний алгоритм оптимізації, який застосовується, наприклад, Золоте відношення, Фібоначчі або Бісекція.
+- **Оптимальний x**: Значення змінної \( x \), яке дає мінімальне значення функції, знайдене методом оптимізації.
+- **Значення Функції**: Значення функції при оптимальному \( x \).
+- **Ітерації**: Кількість ітерацій, які виконав алгоритм оптимізації для досягнення результату.
+- **Результат**: Вказує, чи була оптимізація "Успішною" або "Неуспішною" відповідно до визначених критеріїв.
+- **Час**: Час, витрачений алгоритмом оптимізації для завершення, вимірюється в секундах.
+- **Точність**: Бажаний рівень точності для результату оптимізації, зазвичай невелике додатне число.
 </details>
