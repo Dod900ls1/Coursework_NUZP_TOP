@@ -75,5 +75,5 @@ def main(file_path: str) -> None:
         print(f'Method: {method}, Correlation: {correlation}')
 
 
-# Run the main function with the path to your CSV file
-main('optimization_results2.csv')
+if __name__ == '__main__':
+    main('optimization_results2.csv')
