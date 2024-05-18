@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 from typing import Dict
 
@@ -33,7 +32,7 @@ def compute_correlations(df: pd.DataFrame) -> Dict[str, float]:
 
     for method in methods:
         method_df = df[df['Method'] == method]
-        correlation = method_df['Iterations'].corr(method_df['Precision'])
+        correlation = method_df['Iterations'].corr(method_df['Precision'], method="spearman")
         correlations[method] = correlation
 
     return correlations
