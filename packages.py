@@ -7,7 +7,8 @@ libraries = [
     "pandas",
     "numpy",
     "scipy",
-    "sympy"
+    "sympy",
+    "statsmodels"
 ]
 
 # Function to install a package using pip
